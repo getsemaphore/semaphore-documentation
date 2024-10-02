@@ -5,6 +5,7 @@
       "get": {
         "operationId": "AppController_search",
         "summary": "Search for companies",
+        "description": "This endpoint allows you to search for companies based on a country code and a query string.\n\nThe search can be performed using either a company name or registration number, depending on the country's supported search capabilities.\n\nThe results include basic company information such as name, address, and registration number.\n\nDepending on the country, the speed might vary, from sub-second results, up to 10 seconds.",
         "parameters": [
           {
             "name": "country",
@@ -125,7 +126,8 @@
     "/v1/company": {
       "post": {
         "operationId": "AppController_getCompany",
-        "summary": "Get company information",
+        "summary": "Retrieve company data",
+        "description": "This endpoint allows you to retrieve detailed information about a specific company.\n\nYou need to provide the country code, company number, and the desired data points.\n\nAvailable data points are:\n- company_profile: Basic company information\n- legal_representatives: Information about company officers\n- ultimate_beneficial_owners: Information about beneficial owners\n- available_documents: List of available official documents\n\nYou can also request specific documents by providing their IDs in the \"documents\" field.\nThese can be either random IDs from the available_documents data point, or stable quick access IDs for certain documents.\n\nThe response will include the requested information based on the specified data points and documents.",
         "parameters": [],
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetCompanyDto" } } } },
         "responses": {
@@ -395,29 +397,155 @@
       },
       "ActivityDto": {
         "type": "object",
-        "properties": { "classification": { "type": "string" }, "code": { "type": "string" }, "description": { "type": "string" } },
+        "properties": {
+          "classification": { "type": "string", "description": "Classification of the activity", "example": "NAFRev2" },
+          "code": { "type": "string", "description": "Code of the activity", "example": "62.02A" },
+          "description": {
+            "type": "string",
+            "description": "Description of the activity",
+            "example": "Conseil en systèmes et logiciels informatiques"
+          }
+        },
         "required": ["classification", "code", "description"]
       },
       "CompanyProfileDTO": {
         "type": "object",
         "properties": {
-          "country": { "type": "string" },
-          "registration_number": { "type": "string" },
+          "country": {
+            "type": "string",
+            "enum": [
+              "AE",
+              "AT",
+              "AU",
+              "BE",
+              "BL",
+              "BR",
+              "CH",
+              "CN",
+              "CY",
+              "DE",
+              "DK",
+              "EE",
+              "ES",
+              "FI",
+              "FR",
+              "GF",
+              "GG",
+              "GI",
+              "GP",
+              "GR",
+              "IN",
+              "IT",
+              "JE",
+              "JP",
+              "LT",
+              "LU",
+              "LV",
+              "MK",
+              "MQ",
+              "MT",
+              "MY",
+              "NC",
+              "NL",
+              "NO",
+              "NZ",
+              "PF",
+              "PM",
+              "PT",
+              "RE",
+              "SE",
+              "SG",
+              "SI",
+              "TW",
+              "UK",
+              "US",
+              "US-AK",
+              "US-AL",
+              "US-AZ",
+              "US-CA",
+              "US-CO",
+              "US-CT",
+              "US-DC",
+              "US-DE",
+              "US-FL",
+              "US-IA",
+              "US-ID",
+              "US-IL",
+              "US-IN",
+              "US-KY",
+              "US-LA",
+              "US-MD",
+              "US-ME",
+              "US-MN",
+              "US-MO",
+              "US-MS",
+              "US-MT",
+              "US-NC",
+              "US-ND",
+              "US-NH",
+              "US-NJ",
+              "US-NM",
+              "US-NV",
+              "US-NY",
+              "US-OH",
+              "US-OK",
+              "US-PA",
+              "US-RI",
+              "US-SC",
+              "US-SD",
+              "US-TN",
+              "US-TX",
+              "US-VA",
+              "US-WA",
+              "US-WI",
+              "US-WV",
+              "US-WY",
+              "WF",
+              "YT"
+            ],
+            "example": "FR",
+            "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
+          },
+          "registration_number": {
+            "type": "string",
+            "example": "928020932",
+            "description": "The company number. In some countries, this might be a concatenation of the registry and city (e.g., in Germany: \"Augsburg HRB 34617\"). The search function will always return a usable company number. Check the documentation to see which number format is used for each country."
+          },
           "other_identifiers": {
             "type": "object",
             "additionalProperties": { "type": "string" },
-            "description": "A dictionary of identifiers with string keys and string values"
+            "description": "A dictionary of local identifiers the name of the identifier as key."
           },
-          "legal_name": { "type": "string" },
-          "status": { "type": "object", "properties": { "local": { "type": "string" }, "active": { "type": "boolean" } } },
-          "commercial_name": { "type": "string" },
-          "registration_date": { "type": "string" },
-          "legal_form": { "type": "object", "properties": { "local": { "type": "string" }, "standard": { "type": "string" } } },
-          "share_capital": { "type": "string" },
-          "tax_identification_number": { "type": "string" },
-          "activity": { "type": "array", "items": { "$ref": "#/components/schemas/ActivityDto" } },
-          "address": { "$ref": "#/components/schemas/AddressDto" }
-        }
+          "legal_name": { "type": "string", "example": "OPSMAKER", "description": "The legal name of the company." },
+          "status": {
+            "type": "object",
+            "properties": { "local": { "type": "string", "example": "active" }, "active": { "type": "boolean", "example": true } },
+            "description": "The status of the company, including local status and whether it is active. Local statuses are country-specific. Active means the company is still operating. Active is only available when a certain mapping is possible from the local status."
+          },
+          "commercial_name": { "type": "string", "example": "OPSMAKER", "description": "The commercial name of the company." },
+          "registration_date": { "type": "string", "example": "2024-04-22", "description": "The registration date of the company." },
+          "legal_form": {
+            "type": "object",
+            "properties": {
+              "local": { "type": "string", "example": "EURL, entreprise unipersonnelle à responsabilité limitée" },
+              "standard": { "type": "string" }
+            },
+            "description": "The legal form of the company, including local and standard forms."
+          },
+          "share_capital": { "type": "string", "example": "1000 Euros", "description": "The share capital of the company." },
+          "tax_identification_number": {
+            "type": "string",
+            "example": "FR42928020932",
+            "description": "The tax identification number of the company."
+          },
+          "activity": {
+            "description": "The activities of the company, including code, description, and classification.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ActivityDto" }
+          },
+          "address": { "description": "The address of the company.", "allOf": [{ "$ref": "#/components/schemas/AddressDto" }] }
+        },
+        "required": ["country"]
       },
       "IndirectOwnershipDetailDto": {
         "type": "object",
@@ -548,16 +676,38 @@
       "AvailableDocumentDto": {
         "type": "object",
         "properties": {
-          "format": { "type": "string", "description": "Document format (ISO format)" },
-          "description": { "type": "string", "description": "Document description" },
-          "availabilityDelay": { "type": "number", "description": "Availability delay in minutes" },
-          "name": { "type": "string", "description": "Document name in the original language" },
-          "id": { "type": "string", "description": "Document ID" },
-          "date": { "format": "date-time", "type": "string", "description": "Document date" },
-          "type": { "type": "string", "description": "Document type" },
-          "price": { "type": "number", "description": "Document price, in credits" }
+          "format": { "type": "string", "description": "Document format (ISO format)", "example": "PDF" },
+          "description": {
+            "type": "string",
+            "description": "Document description",
+            "example": "Uncertified trade register extract, provided by the French INPI"
+          },
+          "availabilityDelay": { "type": "number", "description": "Availability delay in minutes", "example": 0 },
+          "name": { "type": "string", "description": "Document name in the original language", "example": "Certificat INPI" },
+          "id": {
+            "type": "string",
+            "description": "Document ID. This can be either a random ID specific to this document, or a stable quick access ID like \"uncertified_trade_register_extract\" or \"last_available_financial_statement\". Stable IDs enable quick access to specific documents without querying available_documents first. Refer to our country coverage documentation to check which quick access IDs are available for each country.",
+            "example": "uncertified_trade_register_extract"
+          },
+          "date": { "format": "date-time", "type": "string", "description": "Document date", "example": "2024-06-31T23:59:59Z" },
+          "type": {
+            "type": "string",
+            "description": "Document type",
+            "enum": [
+              "financial_statement",
+              "uncertified_trade_register_extract",
+              "certified_trade_register_extract",
+              "ubo_declaration",
+              "financial_accounts",
+              "statutory_document",
+              "trade_register_history",
+              "unknown"
+            ],
+            "example": "uncertified_trade_register_extract"
+          },
+          "price": { "type": "number", "description": "Document price, in credits", "example": 3 }
         },
-        "required": ["format", "description", "availabilityDelay", "name", "id", "date", "type", "price"]
+        "required": ["name", "id", "type"]
       },
       "ErrorDTO": {
         "type": "object",
@@ -571,10 +721,58 @@
       "DocumentDto": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "Document ID" },
-          "url": { "type": "string", "description": "Document Download URL" }
+          "id": {
+            "type": "string",
+            "description": "Document ID. This can be either a random ID specific to this document, or a stable quick access ID like \"uncertified_trade_register_extract\" or \"last_available_financial_statement\". Stable IDs enable quick access to specific documents without querying available_documents first. Refer to our country coverage documentation to check which quick access IDs are available for each country.",
+            "example": "uncertified_trade_register_extract"
+          },
+          "url": {
+            "type": "string",
+            "description": "Temporary document download URL with a 15-minute lifetime. If the URL expires, you can request the same document again within 24 hours without being charged.",
+            "example": "https://example.com/download/document123"
+          }
         },
         "required": ["id", "url"]
+      },
+      "DataPointStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the data point",
+            "example": "succeeded",
+            "enum": ["succeeded", "in_progress", "failed"]
+          },
+          "jobs_in_progress": {
+            "type": "array",
+            "description": "List of job IDs currently in progress to retrieve this data point or this document. \n      You can retrieve the data once the job has finished by either listening to webhooks or repeating the same API call. \n      Note that data points remain available for 24 hours after purchase, allowing for multiple retrievals within this timeframe\n      Multiple jobs can be required to retrieve a single data points when there is multiple underlying data sources. In this case, you will receive multiple webhooks with more data at each step.",
+            "example": ["job_1", "job2"],
+            "items": { "type": "string" }
+          },
+          "errors": {
+            "type": "array",
+            "description": "List of errors encountered while retrieving this data point or this document",
+            "example": ["The local registry could not be reached. Please retry later. "],
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["status"]
+      },
+      "DataStatus": {
+        "type": "object",
+        "properties": {
+          "data_points": {
+            "type": "object",
+            "description": "Retrieval status of data points",
+            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus" }
+          },
+          "documents": {
+            "type": "object",
+            "description": "Retrieval status of documents",
+            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus" }
+          }
+        },
+        "required": ["data_points", "documents"]
       },
       "CompanyDTO": {
         "type": "object",
@@ -582,34 +780,20 @@
           "company": { "$ref": "#/components/schemas/CompanyProfileDTO" },
           "ultimate_beneficial_owners": { "type": "array", "items": { "$ref": "#/components/schemas/BeneficialOwnerDto" } },
           "legal_representatives": {
-            "oneOf": [
-              {
-                "type": "array",
-                "items": {
-                  "oneOf": [
-                    { "$ref": "#/components/schemas/LegalRepresentativeCompanyDto" },
-                    { "$ref": "#/components/schemas/LegalRepresentativeIndividualDto" }
-                  ]
-                }
-              },
-              {
-                "$ref": "#/components/schemas/JobDTO",
-                "properties": {
-                  "result": {
-                    "type": "array",
-                    "items": {
-                      "oneOf": [
-                        { "$ref": "#/components/schemas/LegalRepresentativeCompanyDto" },
-                        { "$ref": "#/components/schemas/LegalRepresentativeIndividualDto" }
-                      ]
-                    }
-                  }
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/LegalRepresentativeCompanyDto" },
+                { "$ref": "#/components/schemas/LegalRepresentativeIndividualDto" }
+              ]
+            }
           },
           "available_documents": { "type": "array", "items": { "$ref": "#/components/schemas/AvailableDocumentDto" } },
-          "documents": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentDto" } }
+          "documents": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentDto" } },
+          "data_status": {
+            "description": "Indicates the status of data points and documents associated with the company. It states if the data has been retrieved, if a job is in progress for asynchronous data, or if a job there was an error.",
+            "allOf": [{ "$ref": "#/components/schemas/DataStatus" }]
+          }
         },
         "required": ["company"]
       }
