@@ -1,0 +1,78 @@
+---
+title: "Retrieve company data"
+icon: "building"
+---
+
+Semaphore provides a comprehensive endpoint to retrieve detailed information about a specific company. This endpoint allows you to request various data points and documents related to the company.
+
+## Available Data Points
+
+When retrieving company data, you can request the following data points:
+
+1. company_profile: Basic company information
+2. legal_representatives: Information about company officers
+3. ultimate_beneficial_owners: Information about beneficial owners
+4. available_documents: List of available official documents
+
+## Retrieving Documents
+
+You can request specific documents by providing their IDs in the "documents" field. These can be:
+
+- Random IDs obtained from the available_documents data point
+- Stable quick access IDs for certain documents (e.g., "uncertified_trade_register_extract")
+
+<Info>
+  For a detailed list of available quick access document IDs for each country, please refer to our [country coverage
+  documentation](/essentials/coverage).
+</Info>
+
+## Response Times and Handling of Asynchronous Data
+
+Response times for company data retrieval can vary depending on the specific registry we need to query:
+
+- Fastest responses: A few hundred milliseconds
+- Slowest responses: Up to multiple business days
+
+### Handling Data Not Immediately Available
+
+In some cases, certain data or documents may not be available at the time of the initial request. In such situations:
+
+1. **Initial Response**: The API returns the data that is immediately available.
+2. **Webhooks**: Notifications are sent via webhooks when additional data becomes available. Each webhook contains previously sent data as well as the new data.
+
+Multiple webhooks may be triggered for a single request, depending on the time required to retrieve all requested information.
+
+## Retrieve Company Data
+
+```bash Request
+curl --request POST \
+  --url https://api.getsemaphore.com/v1/company \
+  --header 'Content-Type: application/json' \
+  --header 'x-api-key: <api-key>' \
+  --data '{
+    "country": "FR",
+    "companyNumber": "928020932",
+    "dataPoints": [
+      "company_profile",
+      "legal_representatives",
+      "ultimate_beneficial_owners",
+      "available_documents"
+    ],
+    "documents": [
+      "uncertified_trade_register_extract"
+    ]
+  }'
+```
+
+The response will include the requested information based on the specified data points and documents.
+
+<Info>
+For country-specific information on:
+
+- Available data points
+- Document types
+- Expected response times
+
+Please consult our comprehensive [coverage map](/essentials/coverage).
+
+</Info>

@@ -2,10 +2,10 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Semaphore",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/logo/light.png",
+    "light": "/logo/dark.png"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/dark.png",
   "colors": {
     "primary": "#0D9373",
     "light": "#07C983",
@@ -26,11 +26,11 @@
     {
       "name": "Documentation",
       "icon": "book-open-cover",
-      "url": "https://docs.getsemaphore.com/"
+      "url": "/"
     },
     {
       "name": "API Reference",
-      "url": "api-reference",
+      "url": "/api-reference",
       "openapi": "/openapi.json",
       "icon": "square-terminal"
     }
@@ -38,18 +38,11 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["essentials/search", "essentials/retrieve_company"]
     },
     {
       "group": "Essentials",
-      "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
+      "pages": ["essentials/webhooks", "essentials/company_registration_numbers", "essentials/coverage"]
     }
   ],
   "footerSocials": {

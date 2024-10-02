@@ -1,0 +1,43 @@
+---
+title: "Search for a company"
+icon: "magnifying-glass"
+---
+
+Semaphore offers two primary methods to search for a company:
+
+1. Company name
+2. Registration number
+
+It's important to note that the availability of these search methods can vary depending on the country you're searching in.
+
+Search response times can fluctuate based on the specific registry we need to query:
+
+- Fastest responses: A few hundred milliseconds
+- Slowest responses: Up to ten seconds
+
+<Info>
+For a detailed breakdown of:
+
+- Available search methods by country
+- Expected response times for each country
+- Other country-specific search information
+
+Please refer to our comprehensive [coverage map](/essentials/coverage).
+
+</Info>
+
+## Search by name of the company
+
+```bash Request
+  curl --request GET \
+    --url 'https://api.getsemaphore.com/v1/search?country=FR&query=Semaphore' \
+    --header 'x-api-key: <api-key>'
+```
+
+## Search by name of the company
+
+```bash Request
+  curl --request GET \
+    --url https://api.getsemaphore.com/v1/search?country=FR&query=928020932 \
+    --header 'x-api-key: <api-key>'
+```

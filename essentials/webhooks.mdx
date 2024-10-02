@@ -1,0 +1,58 @@
+---
+title: "Webhooks Configuration"
+icon: "webhook"
+---
+
+Semaphore provides a webhook configuration portal that allows you to set up and manage notifications for various events related to your account.
+
+## Accessing the Configuration Portal
+
+To access the webhook configuration portal, follow these steps:
+
+1. **Send a POST request** to the following endpoint:
+
+```bash
+curl --location --request POST 'https://api.getsemaphore.com/v1/webhook-portal' \
+--header 'x-api-key: YOUR_API_KEY' \
+--data ''
+```
+
+- Replace `YOUR_API_KEY` with your actual API key.
+- This request will redirect you to the Svyx portal.
+
+2. **Navigate to the webhook configuration portal**:
+   - After executing the request, you will be directed to the Svyx portal where you can configure your webhooks.
+
+## Configuring Your Webhook
+
+Once you're in the Svyx portal, follow these steps to set up your webhook:
+
+1. **Enter your webhook URL**:
+
+   - In the portal, input the URL where you want to receive notifications.
+
+2. **Save the configuration**:
+   - Save your settings to activate the webhook.
+
+<Info>Ensure that the endpoint you provide is capable of receiving POST requests, as this is how Semaphore will send notifications.</Info>
+
+## Best Practices
+
+- **Security**: Implement authentication on your webhook endpoint to ensure that only Semaphore can send notifications to it.
+- **Reliability**: Your endpoint should respond with a 2xx status code to acknowledge receipt of the webhook. Semaphore may retry failed deliveries.
+- **Processing**: Design your webhook receiver to process notifications asynchronously to avoid timeouts.
+
+## Webhook Events
+
+Semaphore can notify you about various events through webhooks. Some common events include:
+
+- Company data updates
+- Search results availability
+- Document processing completion
+
+<Info>
+  For a complete list of available webhook events and their payload structures, please refer to our [Webhook Events
+  Documentation](/api-reference/webhook-events).
+</Info>
+
+By properly configuring and utilizing webhooks, you can create a more responsive and efficient integration with Semaphore's services.
