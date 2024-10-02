@@ -142,11 +142,10 @@
     "/v1/webhook-portal": {
       "post": {
         "operationId": "AppController_generateWebhookPortalLink",
-        "summary": "Generate a short-lived link for webhook portal",
+        "summary": "Access Webhook Configuration Portal",
+        "description": "Generate a short-lived link for the webhook management portal.",
         "parameters": [],
-        "responses": {
-          "200": { "description": "Short-lived link for webhook portal", "content": { "application/json": { "schema": { "type": "string" } } } }
-        },
+        "responses": { "200": { "description": "", "content": { "application/json": { "schema": { "type": "string" } } } } },
         "security": [{ "x-api-key": [] }]
       }
     }
@@ -550,11 +549,24 @@
       "IndirectOwnershipDetailDto": {
         "type": "object",
         "properties": {
-          "percentage": { "type": "string" },
-          "affiliated_company_name": { "type": "string" },
-          "affiliated_company_registration_number": { "type": "string" },
-          "affiliated_company_country": { "type": "string" },
-          "affiliated_company_address": { "type": "array", "items": { "type": "string" } }
+          "percentage": { "type": "string", "description": "Indirect ownership percentage through this affiliated company", "example": "25.5%" },
+          "affiliated_company_name": { "type": "string", "description": "Name of the affiliated company", "example": "Acme Holdings Ltd." },
+          "affiliated_company_registration_number": {
+            "type": "string",
+            "description": "Registration number of the affiliated company",
+            "example": "123456789"
+          },
+          "affiliated_company_country": {
+            "type": "string",
+            "description": "Country where the affiliated company is registered",
+            "example": "United Kingdom"
+          },
+          "affiliated_company_address": {
+            "description": "Address of the affiliated company",
+            "example": ["123 Business Street", "Suite 456", "London", "SW1A 1AA"],
+            "type": "array",
+            "items": { "type": "string" }
+          }
         },
         "required": [
           "percentage",
@@ -567,8 +579,12 @@
       "IndirectOwnershipPercentageDto": {
         "type": "object",
         "properties": {
-          "total": { "type": "string" },
-          "details": { "type": "array", "items": { "$ref": "#/components/schemas/IndirectOwnershipDetailDto" } }
+          "total": { "type": "string", "description": "Total indirect ownership percentage. Might be a number or a range.", "example": "25.5%" },
+          "details": {
+            "description": "Detailed breakdown of indirect ownership percentages through affiliated companies.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/IndirectOwnershipDetailDto" }
+          }
         },
         "required": ["total", "details"]
       },
@@ -587,17 +603,18 @@
       "BeneficialOwnerDto": {
         "type": "object",
         "properties": {
-          "first_name": { "type": "string", "description": "First name of the beneficial owner" },
-          "gender": { "type": "string", "description": "Gender of the beneficial owner" },
-          "last_name": { "type": "string", "description": "Last name of the beneficial owner" },
-          "name": { "type": "string", "description": "Full name of the beneficial owner" },
-          "birth_date": { "type": "string", "description": "Birth date of the beneficial owner", "format": "date" },
-          "birth_country": { "type": "string", "description": "Birth country of the beneficial owner" },
-          "birth_place": { "type": "string", "description": "Birth place of the beneficial owner" },
-          "nationality": { "type": "string", "description": "Nationality of the beneficial owner" },
-          "country_of_residence": { "type": "string", "description": "Country of residence of the beneficial owner" },
+          "first_name": { "type": "string", "description": "First name of the beneficial owner", "example": "John" },
+          "gender": { "type": "string", "description": "Gender of the beneficial owner", "example": "Male" },
+          "last_name": { "type": "string", "description": "Last name of the beneficial owner", "example": "Doe" },
+          "name": { "type": "string", "description": "Full name of the beneficial owner", "example": "John Doe" },
+          "birth_date": { "type": "string", "description": "Birth date of the beneficial owner", "format": "date", "example": "1980-01-01" },
+          "birth_country": { "type": "string", "description": "Birth country of the beneficial owner", "example": "USA" },
+          "birth_place": { "type": "string", "description": "Birth place of the beneficial owner", "example": "New York" },
+          "nationality": { "type": "string", "description": "Nationality of the beneficial owner", "example": "American" },
+          "country_of_residence": { "type": "string", "description": "Country of residence of the beneficial owner", "example": "USA" },
           "ownership_percentage": {
             "description": "Ownership percentage details of the beneficial owner",
+            "example": { "percentage": 50 },
             "allOf": [{ "$ref": "#/components/schemas/OwnershipPercentageDto" }]
           }
         },
@@ -617,52 +634,58 @@
       "LegalRepresentativeBaseDto": {
         "type": "object",
         "properties": {
-          "entity_type": { "type": "string", "enum": ["company", "individual"] },
-          "name": { "type": "string" },
-          "address": { "$ref": "#/components/schemas/AddressDto" },
-          "position": { "type": "string" }
+          "entity_type": {
+            "type": "string",
+            "enum": ["company", "individual"],
+            "description": "Type of entity: company or individual",
+            "example": "individual"
+          },
+          "name": { "type": "string", "description": "Name of the legal representative", "example": "John Doe" },
+          "address": {
+            "description": "Address of the legal representative",
+            "example": { "city": "Paris", "country": "France", "postal_code": "75001", "address_line_1": "123 Rue de Rivoli" },
+            "allOf": [{ "$ref": "#/components/schemas/AddressDto" }]
+          },
+          "position": { "type": "string", "description": "Position of the legal representative within the entity", "example": "CEO" }
         },
         "required": ["entity_type", "name", "address", "position"]
       },
       "LegalRepresentativeCompanyDto": {
         "type": "object",
         "properties": {
-          "entity_type": { "type": "string", "enum": ["company"] },
-          "name": { "type": "string" },
-          "address": { "$ref": "#/components/schemas/AddressDto" },
-          "position": { "type": "string" },
-          "registration_number": { "type": "string" },
-          "legal_form": { "type": "string" },
-          "country": { "type": "string" }
+          "entity_type": { "type": "string", "enum": ["company"], "description": "Type of entity: company", "example": "company" },
+          "name": { "type": "string", "description": "Name of the legal representative", "example": "John Doe" },
+          "address": {
+            "description": "Address of the legal representative",
+            "example": { "city": "Paris", "country": "France", "postal_code": "75001", "address_line_1": "123 Rue de Rivoli" },
+            "allOf": [{ "$ref": "#/components/schemas/AddressDto" }]
+          },
+          "position": { "type": "string", "description": "Position of the legal representative within the entity", "example": "CEO" },
+          "registration_number": { "type": "string", "description": "Registration number of the company", "example": "123456789" },
+          "legal_form": { "type": "string", "description": "Legal form of the company", "example": "SARL" },
+          "country": { "type": "string", "description": "Country where the company is registered", "example": "France" }
         },
         "required": ["entity_type", "name", "address", "position", "registration_number", "legal_form", "country"]
       },
       "LegalRepresentativeIndividualDto": {
         "type": "object",
         "properties": {
-          "entity_type": { "type": "string", "enum": ["individual"] },
-          "name": { "type": "string" },
-          "address": { "$ref": "#/components/schemas/AddressDto" },
-          "position": { "type": "string" },
-          "first_name": { "type": "string" },
-          "last_name": { "type": "string" },
-          "birth_date": { "type": "string" },
-          "birth_country": { "type": "string" },
-          "birth_place": { "type": "string" },
-          "voting_rights_percentage": { "type": "string" }
+          "entity_type": { "type": "string", "enum": ["individual"], "description": "Type of entity: individual", "example": "individual" },
+          "name": { "type": "string", "description": "Name of the individual", "example": "Jane Smith" },
+          "address": {
+            "description": "Address of the legal representative",
+            "example": { "city": "Paris", "country": "France", "postal_code": "75001", "address_line_1": "123 Rue de Rivoli" },
+            "allOf": [{ "$ref": "#/components/schemas/AddressDto" }]
+          },
+          "position": { "type": "string", "description": "Position of the legal representative within the entity", "example": "CEO" },
+          "first_name": { "type": "string", "description": "First name of the individual", "example": "Jane" },
+          "last_name": { "type": "string", "description": "Last name of the individual", "example": "Smith" },
+          "birth_date": { "type": "string", "description": "Birth date of the individual", "example": "1980-01-01" },
+          "birth_country": { "type": "string", "description": "Birth country of the individual", "example": "USA" },
+          "birth_place": { "type": "string", "description": "Birth place of the individual", "example": "New York" },
+          "voting_rights_percentage": { "type": "string", "description": "Voting rights percentage of the individual", "example": "50%" }
         },
-        "required": [
-          "entity_type",
-          "name",
-          "address",
-          "position",
-          "first_name",
-          "last_name",
-          "birth_date",
-          "birth_country",
-          "birth_place",
-          "voting_rights_percentage"
-        ]
+        "required": ["entity_type", "name", "address", "position"]
       },
       "JobDTO": {
         "type": "object",
@@ -764,12 +787,12 @@
           "data_points": {
             "type": "object",
             "description": "Retrieval status of data points",
-            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus" }
+            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus", "description": "The retriveal status of the data point" }
           },
           "documents": {
             "type": "object",
             "description": "Retrieval status of documents",
-            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus" }
+            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus", "description": "The retriveal status of the document" }
           }
         },
         "required": ["data_points", "documents"]
@@ -777,10 +800,18 @@
       "CompanyDTO": {
         "type": "object",
         "properties": {
-          "company": { "$ref": "#/components/schemas/CompanyProfileDTO" },
-          "ultimate_beneficial_owners": { "type": "array", "items": { "$ref": "#/components/schemas/BeneficialOwnerDto" } },
+          "company": {
+            "description": "The main profile information of the company, including, if available, details such as name, registration number, address, and other core data.",
+            "allOf": [{ "$ref": "#/components/schemas/CompanyProfileDTO" }]
+          },
+          "ultimate_beneficial_owners": {
+            "description": "The ultimate beneficial owners of the company, including, if available, their name, nationality, and other relevant details.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/BeneficialOwnerDto" }
+          },
           "legal_representatives": {
             "type": "array",
+            "description": "The legal representatives of the company, which can be either natural persons (individuals) or legal entities (companies). This includes, if available, their name, nationality, and other relevant details.",
             "items": {
               "oneOf": [
                 { "$ref": "#/components/schemas/LegalRepresentativeCompanyDto" },
