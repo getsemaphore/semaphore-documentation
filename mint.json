@@ -2,10 +2,10 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Semaphore",
   "logo": {
-    "dark": "/logo/light.png",
-    "light": "/logo/dark.png"
+    "dark": "/logo/logo-white.svg",
+    "light": "/logo/logo-dark.svg"
   },
-  "favicon": "/logo/dark.png",
+  "favicon": "/logo/icon-dark.svg",
   "colors": {
     "primary": "#0D9373",
     "light": "#07C983",
