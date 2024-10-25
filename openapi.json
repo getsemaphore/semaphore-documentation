@@ -279,7 +279,7 @@
       "GetCompanyDto": {
         "type": "object",
         "properties": {
-          "country": {
+          "countryCode": {
             "type": "string",
             "enum": [
               "AE",
@@ -381,9 +381,9 @@
           },
           "dataPoints": {
             "type": "array",
-            "items": { "type": "string", "enum": ["company_profile", "legal_representatives", "ultimate_beneficial_owners", "available_documents"] },
+            "items": { "type": "string", "enum": ["company_profile", "ultimate_beneficial_owners", "available_documents", "legal_representatives"] },
             "example": ["company_profile"],
-            "description": "The data points to retrieve. Available data points are: company_profile, legal_representatives, ultimate_beneficial_owners, available_documents."
+            "description": "The data points to retrieve. Available data points are: company_profile, ultimate_beneficial_owners, available_documents."
           },
           "documents": {
             "type": "array",
@@ -392,7 +392,7 @@
             "description": "The document ids to retrieve. These can be either random ids obtained from the available_documents return, or in some cases, stable quick access ids like \"uncertified_trade_register_extract\" or \"last_available_financial_statement\". Stable ids enable quick access to specific documents without querying available_documents first. Refer to our country coverage documentation to check which quick access ids are available for each country."
           }
         },
-        "required": ["country", "companyNumber", "dataPoints"]
+        "required": ["countryCode", "companyNumber"]
       },
       "ActivityDto": {
         "type": "object",
@@ -720,9 +720,9 @@
               "financial_statement",
               "uncertified_trade_register_extract",
               "certified_trade_register_extract",
-              "ubo_declaration",
+              "ubo_extract",
               "financial_accounts",
-              "statutory_document",
+              "status",
               "trade_register_history",
               "unknown"
             ],
