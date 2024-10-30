@@ -2083,8 +2083,8 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Type of percentage detail (shares, voting rights, or both)",
-            "enum": ["shares", "voting-rights", "both"],
+            "description": "Type of percentage detail (shares, voting rights)",
+            "enum": ["shares", "voting-rights"],
             "example": "shares"
           },
           "percentageRange": {
@@ -2107,7 +2107,15 @@
       "ControlDto": {
         "type": "object",
         "properties": {
-          "controlType": { "type": "string", "description": "Type of control held by the beneficial owner", "example": "ownership-of-shares" },
+          "types": {
+            "type": "array",
+            "description": "Types of control held by the beneficial owner",
+            "items": {
+              "type": "string",
+              "enum": ["ownership-of-shares", "voting-rights", "appoint-and-remove-directors", "significant-influence-or-control"]
+            },
+            "example": ["ownership-of-shares"]
+          },
           "description": {
             "type": "string",
             "description": "Description of why the person is of significant control",
@@ -2119,7 +2127,7 @@
             "items": { "$ref": "#/components/schemas/PercentageDetailDto" }
           }
         },
-        "required": ["controlType", "description", "details"]
+        "required": ["types", "description", "details"]
       },
       "UltimateBeneficialOwnerV2": {
         "type": "object",
