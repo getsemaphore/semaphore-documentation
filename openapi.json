@@ -4,7 +4,7 @@
     "/v1/search": {
       "get": {
         "operationId": "AppController_search",
-        "summary": "Search for companies",
+        "summary": "Search for companies - Deprecated",
         "description": "This endpoint allows you to search for companies based on a country code and a query string.\n\nThe search can be performed using either a company name or registration number, depending on the country's supported search capabilities.\n\nThe results include basic company information such as name, address, and registration number.\n\nDepending on the country, the speed might vary, from sub-second results, up to 10 seconds.",
         "parameters": [
           {
@@ -57,7 +57,7 @@
                 "SG",
                 "SI",
                 "TW",
-                "UK",
+                "GB",
                 "US",
                 "US-AK",
                 "US-AL",
@@ -127,7 +127,7 @@
     "/v2/search": {
       "get": {
         "operationId": "AppController_searchV2",
-        "summary": "Search for companies - V2 - Alpha",
+        "summary": "Search for companies",
         "description": "This endpoint allows you to search for companies based on a country code and a query string.\n\nThe search can be performed using either a company name or registration number, depending on the country's supported search capabilities.\n\nThe results include basic company information such as name, address, and registration number.\n\nDepending on the country, the speed might vary, from sub-second results, up to 10 seconds.",
         "parameters": [
           {
@@ -180,7 +180,7 @@
                 "SG",
                 "SI",
                 "TW",
-                "UK",
+                "GB",
                 "US",
                 "US-AK",
                 "US-AL",
@@ -250,7 +250,7 @@
     "/v1/company": {
       "post": {
         "operationId": "AppController_getCompany",
-        "summary": "Retrieve company data",
+        "summary": "Retrieve company data - Deprecated",
         "description": "This endpoint allows you to retrieve detailed information about a specific company.\n\nYou need to provide the country code, company number, and the desired data points.\n\nAvailable data points are:\n- company_profile: Basic company information\n- legal_representatives: Information about company officers\n- ultimate_beneficial_owners: Information about beneficial owners\n- available_documents: List of available official documents\n\nYou can also request specific documents by providing their IDs in the \"documents\" field.\nThese can be either random IDs from the available_documents data point, or stable quick access IDs for certain documents.\n\nThe response will include the requested information based on the specified data points and documents.",
         "parameters": [],
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetCompanyDto" } } } },
@@ -267,10 +267,19 @@
     "/v2/company": {
       "post": {
         "operationId": "AppController_getCompanyV2",
-        "summary": "Retrieve company data - V2 - Alpha",
+        "summary": "Retrieve company data",
         "description": "This endpoint allows you to retrieve detailed information about a specific company.\n\nYou need to provide the country code, company number, and the desired data points.\n\nAvailable data points are:\n- company_profile: Basic company information\n- legal_representatives: Information about company officers\n- ultimate_beneficial_owners: Information about beneficial owners\n- available_documents: List of available official documents\n\nYou can also request specific documents by providing their IDs in the \"documents\" field.\nThese can be either random IDs from the available_documents data point, or stable quick access IDs for certain documents.\n\nThe response will include the requested information based on the specified data points and documents.",
         "parameters": [],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetCompanyDtoV2" } } } },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [{ "$ref": "#/components/schemas/GetCompanyDtoV2" }, { "$ref": "#/components/schemas/GetCompanyByRequestIdDtoV2" }]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Company information",
@@ -281,14 +290,15 @@
         "tags": ["V2"]
       }
     },
-    "/v1/webhook-portal": {
+    "/v2/webhook-portal": {
       "post": {
         "operationId": "AppController_generateWebhookPortalLink",
         "summary": "Access Webhook Configuration Portal",
         "description": "Generate a short-lived link for the webhook management portal.",
         "parameters": [],
         "responses": { "200": { "description": "", "content": { "application/json": { "schema": { "type": "string" } } } } },
-        "security": [{ "x-api-key": [] }]
+        "security": [{ "x-api-key": [] }],
+        "tags": ["V2"]
       }
     }
   },
@@ -323,7 +333,6 @@
           "country": {
             "type": "string",
             "enum": [
-              "UK",
               "AF",
               "AX",
               "AL",
@@ -608,7 +617,6 @@
           "country": {
             "type": "string",
             "enum": [
-              "UK",
               "AF",
               "AX",
               "AL",
@@ -914,7 +922,7 @@
               "SG",
               "SI",
               "TW",
-              "UK",
+              "GB",
               "US",
               "US-AK",
               "US-AL",
@@ -1002,7 +1010,6 @@
           "country": {
             "type": "string",
             "enum": [
-              "UK",
               "AF",
               "AX",
               "AL",
@@ -1472,7 +1479,6 @@
               "uncertified_trade_register_extract",
               "certified_trade_register_extract",
               "ubo_extract",
-              "financial_accounts",
               "status",
               "trade_register_history",
               "unknown",
@@ -1533,10 +1539,10 @@
         },
         "required": ["status"]
       },
-      "DataStatus": {
+      "DataStatusV1": {
         "type": "object",
         "properties": {
-          "dataPoints": {
+          "data_points": {
             "type": "object",
             "description": "Retrieval status of data points",
             "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus", "description": "The retriveal status of the data point" }
@@ -1547,7 +1553,7 @@
             "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus", "description": "The retriveal status of the document" }
           }
         },
-        "required": ["dataPoints", "documents"]
+        "required": ["data_points", "documents"]
       },
       "CompanyDTO": {
         "type": "object",
@@ -1575,7 +1581,7 @@
           "documents": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentDto" } },
           "data_status": {
             "description": "Indicates the status of data points and documents associated with the company. It states if the data has been retrieved, if a job is in progress for asynchronous data, or if a job there was an error.",
-            "allOf": [{ "$ref": "#/components/schemas/DataStatus" }]
+            "allOf": [{ "$ref": "#/components/schemas/DataStatusV1" }]
           }
         },
         "required": ["company"]
@@ -1634,7 +1640,7 @@
               "SG",
               "SI",
               "TW",
-              "UK",
+              "GB",
               "US",
               "US-AK",
               "US-AL",
@@ -1698,6 +1704,16 @@
         },
         "required": ["id", "country"]
       },
+      "GetCompanyByRequestIdDtoV2": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "Optional UUID that references a previous request. When provided, returns cached data from that specific request instead of fetching fresh data."
+          }
+        }
+      },
       "CompanyStatus": {
         "type": "object",
         "properties": {
@@ -1760,7 +1776,6 @@
           "countryCode": {
             "type": "string",
             "enum": [
-              "UK",
               "AF",
               "AX",
               "AL",
@@ -2046,6 +2061,11 @@
             },
             "additionalProperties": { "type": "array", "items": { "$ref": "#/components/schemas/ActivityItem" } }
           },
+          "activityDescription": {
+            "type": "string",
+            "description": "A text description of the company activities",
+            "example": "Development of software solutions and IT consulting services"
+          },
           "legalAddress": { "description": "The address of the company.", "allOf": [{ "$ref": "#/components/schemas/AddressV2DTO" }] }
         },
         "required": ["id", "countryCode"]
@@ -2095,7 +2115,7 @@
           "percentageValue": { "type": "number", "description": "Exact percentage of control", "example": 30 },
           "monetaryAmount": { "description": "Monetary amount of shares controlled", "allOf": [{ "$ref": "#/components/schemas/MonetaryAmount" }] },
           "numberOfShares": { "type": "number", "description": "Number of shares controlled", "example": 1000 },
-          "controlNature": {
+          "nature": {
             "type": "string",
             "description": "Indicates whether the control is direct or indirect",
             "enum": ["direct", "indirect"],
@@ -2153,7 +2173,7 @@
             "example": { "country": "FR", "city": "Paris", "street": "1 Rue de Rivoli", "postalCode": "75001" },
             "allOf": [{ "$ref": "#/components/schemas/AddressV2DTO" }]
           },
-          "nationalityCountryCode": { "type": "string", "description": "Nationality ISO2 country code of the person", "example": "US" },
+          "nationality": { "type": "string", "description": "Nationality ISO2 country code of the person", "example": "US" },
           "residenceAddress": { "description": "Residence address of the person", "allOf": [{ "$ref": "#/components/schemas/AddressV2DTO" }] },
           "control": {
             "description": "Details of control held by the beneficial owner",
@@ -2166,7 +2186,7 @@
             "allOf": [{ "$ref": "#/components/schemas/ControlDto" }]
           }
         },
-        "required": ["gender", "name", "birthDate", "birthAddress", "nationalityCountryCode", "residenceAddress", "control"]
+        "required": ["gender", "name", "birthDate", "birthAddress", "nationality", "residenceAddress", "control"]
       },
       "RoleEnum": {
         "type": "string",
@@ -2222,10 +2242,10 @@
             "example": { "country": "FR", "city": "Paris", "street": "1 Rue de Rivoli", "postalCode": "75001" },
             "allOf": [{ "$ref": "#/components/schemas/AddressV2DTO" }]
           },
-          "nationalityCountryCode": { "type": "string", "description": "Nationality ISO2 country code of the person", "example": "US" },
+          "nationality": { "type": "string", "description": "Nationality ISO2 country code of the person", "example": "US" },
           "residenceAddress": { "description": "Residence address of the person", "allOf": [{ "$ref": "#/components/schemas/AddressV2DTO" }] }
         },
-        "required": ["gender", "name", "birthDate", "birthAddress", "nationalityCountryCode", "residenceAddress"]
+        "required": ["gender", "name", "birthDate", "birthAddress", "nationality", "residenceAddress"]
       },
       "LegalRepresentativeV2DTO": {
         "type": "object",
@@ -2315,14 +2335,30 @@
             "example": { "country": "FR", "city": "Paris", "street": "1 Rue de Rivoli", "postalCode": "75001" },
             "allOf": [{ "$ref": "#/components/schemas/AddressV2DTO" }]
           },
-          "nationalityCountryCode": { "type": "string", "description": "Nationality ISO2 country code of the person", "example": "US" },
+          "nationality": { "type": "string", "description": "Nationality ISO2 country code of the person", "example": "US" },
           "residenceAddress": { "description": "Residence address of the person", "allOf": [{ "$ref": "#/components/schemas/AddressV2DTO" }] },
           "role": { "description": "The role of the person", "allOf": [{ "$ref": "#/components/schemas/RoleDto" }] },
           "startDate": { "type": "string", "description": "The start date of the person's role", "example": "2022-01-01" },
           "endDate": { "type": "string", "description": "The end date of the person's role (if applicable)", "example": "2023-12-31" },
           "department": { "type": "string", "description": "The department the officer oversees", "example": "Finance" }
         },
-        "required": ["gender", "name", "birthDate", "birthAddress", "nationalityCountryCode", "residenceAddress"]
+        "required": ["gender", "name", "birthDate", "birthAddress", "nationality", "residenceAddress"]
+      },
+      "DataStatus": {
+        "type": "object",
+        "properties": {
+          "dataPoints": {
+            "type": "object",
+            "description": "Retrieval status of data points",
+            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus", "description": "The retriveal status of the data point" }
+          },
+          "documents": {
+            "type": "object",
+            "description": "Retrieval status of documents",
+            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus", "description": "The retriveal status of the document" }
+          }
+        },
+        "required": ["dataPoints", "documents"]
       },
       "RequestV2": {
         "type": "object",
@@ -2374,7 +2410,7 @@
               "SG",
               "SI",
               "TW",
-              "UK",
+              "GB",
               "US",
               "US-AK",
               "US-AL",
