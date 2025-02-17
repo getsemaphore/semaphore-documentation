@@ -1,0 +1,72 @@
+---
+title: "Pricing & Caching"
+icon: "credit-card"
+---
+
+## Credit System and Caching
+
+Semaphore uses a credit-based system with smart caching to optimize costs:
+
+### How Credits Work
+
+To use the API, you need to purchase credits in advance through the backoffice. Each dataPoint or document request consumes a specific number of credits from your balance. When your balance becomes negative, API requests will be blocked. If your account remains unfunded for 30 days after going negative, we automatically generate an invoice for the negative amount.
+
+### Automatic Cost Optimization
+
+Our 24-hour caching system is designed to minimize your costs. When you request a dataPoint or document, the result is automatically cached for 24 hours. Any subsequent requests for the same data within this period will be served from the cache without consuming additional credits. The cache is maintained separately for each company to ensure data integrity.
+
+You can also retrieve previously requested data by using the `requestId` from your initial request. Requests made with a `requestId` are never billed, regardless of the cache period, as they simply return the data from your original request.
+
+### Best Practices
+
+To optimize your credit usage, regularly monitor your balance in the backoffice and set up low balance alerts. Consider batching similar requests within the 24-hour cache window to take advantage of the caching system. For high-volume operations, you may want to store the `requestId` of your requests to retrieve the data multiple times without additional charges.
+
+## Retrieving Pricing Information
+
+You can retrieve pricing information for a specific country using our pricing endpoint. This is useful for:
+
+- Understanding costs before making requests
+- Budgeting and planning purposes
+- Displaying pricing information to end users
+
+### Endpoint
+
+```bash
+POST https://api.getsemaphore.com/v2/pricing
+```
+
+### Request
+
+```json
+{
+  "country": "FR" // ISO country code
+}
+```
+
+The response includes:
+
+- Base price for company searches
+- Pricing for different data points (company profile, UBO, etc.)
+- Document retrieval costs
+- Any country-specific pricing variations
+
+<Note>All prices are returned in credits and may vary based on your subscription plan.</Note>
+
+### Example Request
+
+```bash
+curl --request POST \
+  --url https://api.getsemaphore.com/v2/pricing \
+  --header 'Content-Type: application/json' \
+  --header 'x-api-key: <api-key>' \
+  --data '{
+    "country": "FR"
+  }'
+```
+
+## Enterprise Solutions
+
+<Info>
+  For high-volume usage, custom solutions are available: - Custom pricing plans - Custom cache periods - Dedicated support Contact
+  sales@getsemaphore.com to discuss your needs.
+</Info>

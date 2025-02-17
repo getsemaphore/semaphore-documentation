@@ -15,19 +15,11 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": [
-              "introduction",
-              "essentials/search",
-              "essentials/retrieve_company"
-            ]
+            "pages": ["introduction", "essentials/search", "essentials/retrieve_company"]
           },
           {
             "group": "Essentials",
-            "pages": [
-              "essentials/webhooks",
-              "essentials/company_registration_numbers",
-              "essentials/coverage"
-            ]
+            "pages": ["essentials/pricing-and-caching"]
           }
         ]
       },
