@@ -3,12 +3,14 @@ title: "Search for a company"
 icon: "magnifying-glass"
 ---
 
-Semaphore offers two primary methods to search for a company:
+Semaphore offers a powerful search API to find companies across multiple countries. The search endpoint allows you to find companies based on:
 
-1. Company name
+1. Company name (legal name, commercial name, or historical name)
 2. Registration number
 
 It's important to note that the availability of these search methods can vary depending on the country you're searching in.
+
+## Response Times
 
 Search response times can fluctuate based on the specific registry we need to query:
 
@@ -26,18 +28,57 @@ Please refer to our comprehensive [coverage map](/essentials/coverage).
 
 </Info>
 
-## Search by name of the company
+## Search Endpoint
 
 ```bash Request
-  curl --request GET \
-    --url 'https://api.getsemaphore.com/v1/search?country=FR&query=Semaphore' \
-    --header 'x-api-key: <api-key>'
+curl --request GET \
+  --url 'https://api.getsemaphore.com/v2/search?country=FR&query=Semaphore' \
+  --header 'x-api-key: <api-key>'
 ```
 
-## Search by registration number of the company
+### Query Parameters
 
-```bash Request
-  curl --request GET \
-    --url https://api.getsemaphore.com/v1/search?country=FR&query=928020932 \
-    --header 'x-api-key: <api-key>'
+| Parameter | Required | Description                                                                                                                                                       |
+| --------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| country   | Yes      | Country code for the search. Can be an ISO country code (e.g., "FR", "GB", "DE"). For US states, combine "US" with the state code (e.g., "US-CA" for California). |
+| query     | Yes      | The search term - can be a company name or registration number.                                                                                                   |
+
+### Response
+
+The search results include basic company information such as:
+
+- Legal name (and English translation for non-Latin names)
+- Registration number
+- Legal address
+- Country code
+
+Example response:
+
+```json
+[
+  {
+    "address": {
+      "addressLine1": "10 rue de la Fraternité",
+      "city": "Bagnolet",
+      "postalCode": "93170",
+      "region": "FR",
+      "countryCode": "FR",
+      "state": "Île-de-France"
+    },
+    "companyNumber": "932884117",
+    "legalName": "SEMAPHORE",
+    "legalNameInEnglish": null,
+    "country": "FR"
+  }
+]
 ```
+
+<Note>
+  The company number format may vary by country. For example, in Germany it might be a concatenation of the registry and city (e.g., "Augsburg HRB
+  34617"). The search function will always return a usable company number that can be used with other Semaphore APIs.
+</Note>
+
+<Info>
+  Once you have found a company through the search endpoint, you can use its ID to retrieve more detailed information using the [company data
+  endpoint](/essentials/retrieve-company-data).
+</Info>
