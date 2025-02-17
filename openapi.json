@@ -12,7 +12,7 @@
             "required": true,
             "in": "query",
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California).",
-            "schema": { "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK"], "type": "string" }
+            "schema": { "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"], "type": "string" }
           },
           {
             "name": "query",
@@ -29,12 +29,12 @@
           }
         },
         "security": [{ "x-api-key": [] }],
-        "tags": ["V2"]
+        "tags": ["Search"]
       }
     },
     "/v2/company": {
       "post": {
-        "operationId": "AppController_getCompanyV2",
+        "operationId": "AppController_getCompany",
         "summary": "Retrieve company data",
         "description": "This endpoint allows you to retrieve detailed information about a specific company.\n\nYou can either:\n1. Make a new request by providing:\n   - country code\n   - company id\n   - desired data points\n   - optional document IDs\n\n2. Get results from a previous request by providing:\n   - requestId (this will return cached data and avoid being billed again)\n\nAvailable data points are:\n- companyProfile: Basic company information, legal representatives and shareholders\n- ultimateBeneficialOwners: Information about beneficial owners\n- availableDocuments: List of available official documents\n\nThere are two ways to retrieve documents:\n\n1. Two-step process:\n   - First, request the \"availableDocuments\" data point to get a list of all available documents with their IDs\n   - Then, use these specific document IDs in a second request\n\n2. Direct access using smart IDs:\n   - Use predefined smart IDs for quick access to common documents:\n     - trade_register_extract: Latest trade register extract\n     - certified_trade_register_extract: Latest certified trade register extract\n     - last_fiscal_year_financial_statement: Latest financial statement\n     - last_consolidated_article_of_association: Latest consolidated articles of association\n\nRefer to our country coverage documentation to check which smart IDs are available for each country.",
         "parameters": [],
@@ -53,18 +53,19 @@
           }
         },
         "security": [{ "x-api-key": [] }],
-        "tags": ["V2"]
+        "tags": ["Data"]
       }
     },
-    "/v2/webhook-portal": {
+    "/v2/pricing": {
       "post": {
-        "operationId": "AppController_generateWebhookPortalLink",
-        "summary": "Access Webhook Configuration Portal",
-        "description": "Generate a short-lived link for the webhook management portal.",
+        "operationId": "AppController_getPricing",
+        "summary": "Get pricing for a country",
+        "description": "This endpoint allows you to retrieve the pricing information for a specific country.\n\nThe response includes:\n- Base price for company searches\n- Pricing for different data points (company profile, UBO, etc.)\n- Document retrieval costs\n- Any country-specific pricing variations\n\nThis can be useful for:\n- Understanding costs before making requests\n- Budgeting and planning purposes\n- Displaying pricing information to end users\n\nNote: Prices are returned in euros (EUR) and may vary based on your subscription plan.",
         "parameters": [],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPricingDTO" } } } },
         "responses": { "200": { "description": "", "content": { "application/json": { "schema": { "type": "string" } } } } },
         "security": [{ "x-api-key": [] }],
-        "tags": ["V2"]
+        "tags": ["Pricing"]
       }
     }
   },
@@ -373,7 +374,7 @@
           },
           "country": {
             "type": "string",
-            "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK"],
+            "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"],
             "example": "FR",
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
           },
@@ -977,7 +978,8 @@
             "allOf": [{ "$ref": "#/components/schemas/PhysicalPersonBaseDTO" }]
           },
           "company": { "description": "Details of the company shareholder", "allOf": [{ "$ref": "#/components/schemas/CompanyDTO" }] },
-          "sharePercentage": { "type": "number", "description": "The percentage of shares owned by the shareholder", "example": 25.5 }
+          "sharePercentage": { "type": "number", "description": "The percentage of shares owned by the shareholder", "example": 25.5 },
+          "numberOfShares": { "type": "number", "description": "The absolute number of shares owned by the shareholder", "example": 1000 }
         },
         "required": ["type"]
       },
@@ -1029,9 +1031,10 @@
             "type": "string",
             "description": "Temporary document download URL with a 15-minute lifetime. If the URL expires, you can request the same document again within 24 hours without being charged.",
             "example": "https://example.com/download/document123"
-          }
+          },
+          "blobName": { "type": "string", "description": "Blob name", "example": "document123.pdf" }
         },
-        "required": ["id", "url"]
+        "required": ["id", "url", "blobName"]
       },
       "CompanyActivityItemDTO": {
         "type": "object",
@@ -1088,6 +1091,7 @@
               "bel-status",
               "bel-ubo-data",
               "bel-ubo-form",
+              "bel-trade-register-extract",
               "bes-sa-register-extract",
               "bes-se-register-extract",
               "bgd-register-extract",
@@ -1121,7 +1125,7 @@
               "cyp-company-data",
               "cyp-other",
               "cyp-register-extract",
-              "deu-certified-register-extract",
+              "deu-register-extract",
               "deu-company-data",
               "deu-financial-statements",
               "deu-status",
@@ -1210,6 +1214,7 @@
               "pol-certified-register-extract",
               "pri-register-extract",
               "prt-certified-register-extract",
+              "prt-status",
               "prt-company-data",
               "prt-ubo-data",
               "prt-ubo-form",
@@ -1282,6 +1287,7 @@
             ]
           },
           "url": { "type": "string" },
+          "blobName": { "type": "string" },
           "price": { "type": "number", "description": "Fixed price in cents" },
           "priceMarkup": { "type": "number", "description": "Price markup percentage" }
         },
@@ -1327,6 +1333,7 @@
               "bel-status",
               "bel-ubo-data",
               "bel-ubo-form",
+              "bel-trade-register-extract",
               "bes-sa-register-extract",
               "bes-se-register-extract",
               "bgd-register-extract",
@@ -1360,7 +1367,7 @@
               "cyp-company-data",
               "cyp-other",
               "cyp-register-extract",
-              "deu-certified-register-extract",
+              "deu-register-extract",
               "deu-company-data",
               "deu-financial-statements",
               "deu-status",
@@ -1449,6 +1456,7 @@
               "pol-certified-register-extract",
               "pri-register-extract",
               "prt-certified-register-extract",
+              "prt-status",
               "prt-company-data",
               "prt-ubo-data",
               "prt-ubo-form",
@@ -1521,6 +1529,7 @@
             ]
           },
           "url": { "type": "string" },
+          "blobName": { "type": "string" },
           "price": { "type": "number", "description": "Fixed price in cents" },
           "priceMarkup": { "type": "number", "description": "Price markup percentage" },
           "period": { "$ref": "#/components/schemas/PeriodDTO" }
@@ -1559,6 +1568,7 @@
               "bel-status",
               "bel-ubo-data",
               "bel-ubo-form",
+              "bel-trade-register-extract",
               "bes-sa-register-extract",
               "bes-se-register-extract",
               "bgd-register-extract",
@@ -1592,7 +1602,7 @@
               "cyp-company-data",
               "cyp-other",
               "cyp-register-extract",
-              "deu-certified-register-extract",
+              "deu-register-extract",
               "deu-company-data",
               "deu-financial-statements",
               "deu-status",
@@ -1681,6 +1691,7 @@
               "pol-certified-register-extract",
               "pri-register-extract",
               "prt-certified-register-extract",
+              "prt-status",
               "prt-company-data",
               "prt-ubo-data",
               "prt-ubo-form",
@@ -1753,6 +1764,7 @@
             ]
           },
           "url": { "type": "string" },
+          "blobName": { "type": "string" },
           "price": { "type": "number", "description": "Fixed price in cents" },
           "priceMarkup": { "type": "number", "description": "Price markup percentage" },
           "date": { "type": "string" },
@@ -1768,14 +1780,18 @@
           "financialStatements": { "type": "array", "items": { "$ref": "#/components/schemas/FinancialStatementDTO" } },
           "articlesOfAssociation": { "type": "array", "items": { "$ref": "#/components/schemas/ArticleOfAssociationDTO" } },
           "ultimateBeneficialOwnersCertificate": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentWithUrlDto" } },
-          "otherDocuments": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentWithUrlDto" } }
+          "otherDocuments": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentWithUrlDto" } },
+          "lastFiscalYearFinancialStatement": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentWithUrlDto" } },
+          "mostCompleteStatus": { "$ref": "#/components/schemas/DocumentWithUrlDto" }
         },
         "required": [
           "tradeRegisterExtract",
           "certifiedTradeRegisterExtract",
           "financialStatements",
           "articlesOfAssociation",
-          "ultimateBeneficialOwnersCertificate"
+          "ultimateBeneficialOwnersCertificate",
+          "lastFiscalYearFinancialStatement",
+          "mostCompleteStatus"
         ]
       },
       "DataPointStatus": {
@@ -1798,6 +1814,12 @@
             "description": "List of errors encountered while retrieving this data point or this document",
             "example": ["The local registry could not be reached. Please retry later. "],
             "items": { "type": "string" }
+          },
+          "cost": { "type": "number", "description": "The cost in credits for this data point or document", "example": 10 },
+          "costMarkup": {
+            "type": "number",
+            "description": "The percentage markup for this data point or document when the final cost is not yet known",
+            "example": 20
           }
         },
         "required": ["status"]
@@ -1824,7 +1846,7 @@
           "companyId": { "type": "string", "example": "932884117", "description": "The requested company id." },
           "country": {
             "type": "string",
-            "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK"],
+            "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"],
             "example": "FR",
             "description": "The requested country code."
           },
@@ -1861,11 +1883,22 @@
             "type": "array",
             "items": { "$ref": "#/components/schemas/ShareholderDTO" }
           },
-          "availableDocuments": { "type": "array", "items": { "$ref": "#/components/schemas/AvailableDocumentDTO" } },
-          "documents": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentDTO" } },
+          "documents": { "$ref": "#/components/schemas/DocumentsImprovedDTO" },
           "documentsImproved": { "$ref": "#/components/schemas/DocumentsImprovedDTO" }
         },
         "required": ["request", "company"]
+      },
+      "GetPricingDTO": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"],
+            "example": "FR",
+            "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
+          }
+        },
+        "required": ["country"]
       }
     }
   }

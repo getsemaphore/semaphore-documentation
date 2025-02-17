@@ -9,42 +9,163 @@ Semaphore provides a comprehensive endpoint to retrieve detailed information abo
 
 When retrieving company data, you can request the following data points:
 
-1. company_profile: Basic company information
-2. legal_representatives: Information about company officers
-3. ultimate_beneficial_owners: Information about beneficial owners
-4. available_documents: List of available official documents
+1. `companyProfile`: Basic company information, including legal representatives and shareholders
+2. `ultimateBeneficialOwners`: Information about beneficial owners
+3. `availableDocuments`: List of available official documents
+
+You can request multiple data points in a single request by including them in the `dataPoints` array:
+
+```json
+{
+  "dataPoints": ["companyProfile", "ultimateBeneficialOwners", "availableDocuments"]
+}
+```
 
 ## Retrieving Documents
 
-You can request specific documents by providing their IDs in the "documents" field. These can be:
+You can request specific documents by providing their IDs in the `documents` array. Document IDs can be:
 
-- Random IDs obtained from the available_documents data point
-- Stable quick access IDs for certain documents (e.g., "uncertified_trade_register_extract")
+1. Random IDs obtained from the `availableDocuments` data point
+2. Smart IDs for quick access to common documents
 
-<Info>
-  For a detailed list of available quick access document IDs for each country, please refer to our [country coverage
-  documentation](/essentials/coverage).
-</Info>
+### Smart Document IDs
 
-## Response Times and Handling of Asynchronous Data
+Smart IDs are predefined identifiers that can always be included in your document requests. While they can be used in any request, they don't guarantee document availability. If a corresponding document exists, it will be returned in the response. Our smart IDs are:
 
-Response times for company data retrieval can vary depending on the specific registry we need to query:
+- `trade_register_extract`: Latest trade register extract
+- `certified_trade_register_extract`: Latest certified trade register extract
+- `last_fiscal_year_financial_statement`: Previous year's financial statement (not the last available one)
+- `last_consolidated_article_of_association`: Latest consolidated articles of association
 
-- Fastest responses: A few hundred milliseconds
-- Slowest responses: Up to multiple business days
+<Warning>
+  Smart IDs can be used in any request, but document availability varies by company. For example, if you request
+  `last_fiscal_year_financial_statement`, it specifically looks for the previous year's statement - if that specific year is not available, the
+  request for this document will fail even if older statements exist. Similarly, a French K-bis (trade register extract) might be temporarily
+  unavailable for specific companies.
+</Warning>
 
-### Handling Data Not Immediately Available
+## Understanding the Response
 
-In some cases, certain data or documents may not be available at the time of the initial request. In such situations:
+### Request Object
 
-1. **Initial Response**: The API returns the data that is immediately available.
-2. **Webhooks**: Notifications are sent via webhooks when additional data becomes available. Each webhook contains previously sent data as well as the new data.
+The response includes a `request` object that provides metadata about your request and the status of each requested data point and document:
 
-Multiple webhooks may be triggered for a single request, depending on the time required to retrieve all requested information.
+```json
+{
+  "request": {
+    "companyId": "932884117",
+    "country": "FR",
+    "requestId": "request-12345",
+    "dataPoints": ["companyProfile", "ultimateBeneficialOwners"],
+    "documents": ["trade_register_extract"],
+    "dataStatus": {
+      "dataPoints": {
+        "companyProfile": {
+          "status": "succeeded",
+          "cost": 10
+        },
+        "ultimateBeneficialOwners": {
+          "status": "in_progress",
+          "jobs_in_progress": ["job_1"],
+          "costMarkup": 20
+        }
+      },
+      "documents": {
+        "trade_register_extract": {
+          "status": "failed",
+          "errors": ["The local registry could not be reached. Please retry later."]
+        }
+      }
+    }
+  }
+}
+```
 
-## Retrieve Company Data
+The `dataStatus` field is particularly important as it indicates:
 
-```bash Request
+- Whether data is immediately available (`succeeded`)
+- If retrieval is still in progress (`in_progress`)
+- If there were any errors (`failed`)
+
+<Note>Currently, error messages are generic. We are working on providing more detailed and specific error messages in future updates.</Note>
+
+### Synchronous vs Asynchronous Data
+
+Data retrieval can be either synchronous (immediate) or asynchronous (requiring additional time):
+
+1. **Synchronous Data**: Available in the initial response within milliseconds
+2. **Asynchronous Data**: May take from seconds to multiple business days to retrieve
+
+For asynchronous data, the initial response will indicate `in_progress` status in the `dataStatus` object.
+
+### Progressive Data Delivery
+
+Data is delivered progressively through webhooks as it becomes available. This can happen:
+
+1. At the data point level (e.g., `companyProfile` arrives before `ultimateBeneficialOwners`)
+2. Within a single data point (e.g., basic company info arrives before legal representatives)
+
+Example scenario:
+
+```json
+// Initial response
+{
+  "company": {
+    "name": "Semaphore",
+    "registrationNumber": "123456789"
+  }
+}
+
+// Later webhook delivery
+{
+  "company": {
+    "name": "Semaphore",
+    "registrationNumber": "123456789"
+  },
+  "legalRepresentatives": [
+    {
+      "name": "John Smith",
+      "role": "Director"
+    }
+  ]
+}
+```
+
+### Webhook Delivery
+
+Webhooks deliver updates in a standardized format:
+
+```json
+{
+  "data": {
+    // Updated company data
+  },
+  "requestId": "request-12345"
+}
+```
+
+<Note>A webhook is always delivered, even for synchronous jobs, to ensure consistency in your data processing pipeline.</Note>
+
+Webhook delivery follows the [Svix retry policy](https://docs.svix.com/retries) to ensure reliable delivery.
+
+### Polling Alternative
+
+Instead of using webhooks, you can poll the API using the `requestId` from the initial response:
+
+1. Make the same API call with only the `requestId`
+2. The response will contain the latest available data
+3. Data won't be rebilled when using `requestId`
+4. The state will match the original request
+
+Polling recommendations:
+
+- Maximum rate: 10 requests per second
+- Recommended interval: Every 3 seconds
+- Continue polling until all requested data points show `succeeded` or `failed` status
+
+## Example Request
+
+```bash
 curl --request POST \
   --url https://api.getsemaphore.com/v1/company \
   --header 'Content-Type: application/json' \
@@ -53,26 +174,22 @@ curl --request POST \
     "country": "FR",
     "companyNumber": "928020932",
     "dataPoints": [
-      "company_profile",
-      "legal_representatives",
-      "ultimate_beneficial_owners",
-      "available_documents"
+      "companyProfile",
+      "ultimateBeneficialOwners",
+      "availableDocuments"
     ],
     "documents": [
-      "uncertified_trade_register_extract"
+      "trade_register_extract"
     ]
   }'
 ```
 
-The response will include the requested information based on the specified data points and documents.
-
 <Info>
 For country-specific information on:
-
 - Available data points
 - Document types
 - Expected response times
 
-Please consult our comprehensive [coverage map](/essentials/coverage).
+Please consult our comprehensive [coverage map](https://getsemaphore.com).
 
 </Info>
