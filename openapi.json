@@ -372,7 +372,7 @@
             "example": "932884117",
             "description": "The company id. In some countries, this might be a concatenation of the registry and city (e.g., in Germany: \"Augsburg HRB 34617\"). The search function will always return a usable company number. Check the documentation to see which number format is used for each country."
           },
-          "country": {
+          "countryCode": {
             "type": "string",
             "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"],
             "example": "FR",
@@ -391,7 +391,7 @@
             "description": "There are two ways to retrieve documents:\n\n1. Two-step process:\n   - First, request the \"availableDocuments\" data point to get a list of all available documents with their IDs\n   - Then, use these specific document IDs in a second request\n\n2. Direct access using smart IDs:\n   - Use predefined smart IDs for quick access to common documents:\n     - trade_register_extract: Latest trade register extract\n     - certified_trade_register_extract: Latest certified trade register extract\n     - last_fiscal_year_financial_statement: Latest financial statement\n     - last_consolidated_article_of_association: Latest consolidated articles of association\n\nRefer to our country coverage documentation to check which smart IDs are available for each country."
           }
         },
-        "required": ["id", "country"]
+        "required": ["id", "countryCode"]
       },
       "GetCompanyByRequestIdDtoV2": {
         "type": "object",
