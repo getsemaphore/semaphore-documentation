@@ -6,9 +6,17 @@ icon: "clock-rotate-left"
 
 <Update label="Week 09, 2025">
 
-- 🇮🇹 Added support for asynchronous data retrieval from the Italian Chamber of Commerce (Camerale). As a result, **companyProfile for Italy is now an asynchronous data point**.
-- 🇩🇪 Implemented fallback to Handelsregister when Unternehmensregister is unavailable for search and companyProfile.
-- 🇪🇸 Improved overall speed and reliability of Spanish company data retrieval through infrastructure optimizations
-- 🇨🇳 Improved overall speed and reliability of Chinese company data retrieval through infrastructure optimizations
+### 🇮🇹 Italy
+- Added support for asynchronous data retrieval from the Italian Chamber of Commerce (Camerale). As a result, **companyProfile for Italy is now an asynchronous data point**.
+
+### 🇩🇪 Germany
+- Implemented fallback to Handelsregister when Unternehmensregister is unavailable for search and companyProfile.
+
+### 🇪🇸 Spain
+- Improved overall speed and reliability of Spanish company data retrieval through infrastructure optimizations.
+- Added support for asynchronous data retrieval for legalRepresentatives in Spain. Note that base companyProfile data still remains synchronous. This change prevents blocking access to base company data when fetching many legal representatives, which could be time-consuming for companies with extensive representative lists.
+
+### 🇨🇳 China
+- Improved overall speed and reliability of Chinese company data retrieval through infrastructure optimizations.
 
 </Update>
