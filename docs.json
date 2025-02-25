@@ -29,6 +29,10 @@
           "source": "/openapi.json",
           "directory": "/api-reference"
         }
+      },
+      {
+        "tab": "Changelog",
+        "pages": ["changelog"]
       }
     ]
   },
