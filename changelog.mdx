@@ -9,11 +9,13 @@ icon: "clock-rotate-left"
 ## Platform
 
 - **Implemented embedding cache system** for standardized activity codes, legal forms, and roles processing, reducing API calls and saving up to 1 second of processing time per query.
+- **Fixed error handling** for cases when companies are not found, eliminating 500 errors. Users now see a generic "An Error has occurred in the job status" message. We're working on improving generic error messages.
 
 ## Countries
 
 ### 🇩🇪 Germany
 - Improved robustness of company data retrieval by implementing additional error handling and fallback mechanisms.
+- Improved parsing of shareholders data, enhancing accuracy and completeness of ownership information.
 
 ### 🇬🇧 United Kingdom
 - Fixed Register Extract functionality to adapt to the new Companies House website flow, ensuring reliable document retrieval.
@@ -21,6 +23,10 @@ icon: "clock-rotate-left"
 </Update>
 
 <Update label="Week 10, 2025">
+
+## Platform
+
+- **Fixed error handling** for cases when companies are not found, eliminating 500 errors. Users now see a generic "An Error has occurred in the job status" message. We're working on improving generic error messages.
 
 ## Countries
 
