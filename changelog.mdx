@@ -12,15 +12,17 @@ icon: "clock-rotate-left"
   **Key Feature Release**
 </Callout>
 
-- **New Beta Feature: Company Detention Tree** <Icon icon="diagram-project" color="#16A34A" /> - Introducing `graphBeta`, a new datapoint that allows you to retrieve the complete detention tree of a company. This feature helps visualize company ownership structures and can assist in identifying potential Ultimate Beneficial Owners (UBOs). To use this feature, simply include the "graphBeta" datapoint in your API calls.
+- **Company Detention Tree (Beta)** <Icon icon="diagram-project" color="#16A34A" /> - Introducing `graphBeta`, a new datapoint that allows you to retrieve the complete detention tree of a company. This feature helps visualize company ownership structures and can assist in identifying potential Ultimate Beneficial Owners (UBOs). To use this feature, simply include the "graphBeta" datapoint in your API calls.
 
 <Note>
-This feature is currently in early beta. As it requires retrieving companyProfile data for each entity in the ownership tree, usage may incur significant costs. We recommend reaching out to become a design partner to help shape this feature's development and discuss optimal usage patterns.
+  This feature is currently in early beta. As it requires retrieving companyProfile data for each entity in the ownership tree, usage may incur
+  significant costs. We recommend reaching out to become a design partner to help shape this feature's development and discuss optimal usage patterns.
 </Note>
 
 ## Countries
 
 ### 🇩🇪 Germany
+
 - **Enhanced detention tree reconstruction** by incorporating control statements from Register Extract documents, enabling more accurate ownership structure analysis.
 
 </Update>
@@ -30,15 +32,19 @@ This feature is currently in early beta. As it requires retrieving companyProfil
 ## Countries
 
 ### 🇪🇸 Spain
+
 - **Improved robustness and scalability** of data processing systems, enhancing overall performance and reliability of Spanish company data retrieval.
 
 ### 🇨🇳 China
+
 - **Enhanced error handling** for cases where company is not found but registry is accessible, providing clearer feedback and improved user experience.
 
 ### 🇬🇧 United Kingdom
+
 - **Enhanced error handling** for cases where companies are not found in the registry, providing more informative and user-friendly error messages.
 
 ### 🇩🇪 Germany
+
 - **Improved shareholder data extraction** from documents, adding support for rotated document processing.
 
 </Update>
@@ -48,9 +54,11 @@ This feature is currently in early beta. As it requires retrieving companyProfil
 ## Countries
 
 ### 🇩🇪 Germany
+
 - **Enhanced robustness** of shareholders computation system, improving reliability and accuracy of ownership data processing.
 
 ### 🇪🇸 Spain
+
 - **Improved system resilience** for document access and retrieval, implementing additional error handling and recovery mechanisms.
 
 </Update>
@@ -65,12 +73,14 @@ This feature is currently in early beta. As it requires retrieving companyProfil
 ## Countries
 
 ### 🇩🇪 Germany
+
 - **Major Update: Shareholders now derived from Gesellschafterliste**. This is preliminary work to enable detention tree reconstruction and UBO identification in Germany. Coming soon!
 - Improved robustness of company data retrieval by implementing additional error handling and fallback mechanisms.
 - Improved parsing of shareholders data, enhancing accuracy and completeness of ownership information.
 - Improved handling of german id including parenthesis.
 
 ### 🇬🇧 United Kingdom
+
 - Fixed Register Extract functionality to adapt to the new Companies House website flow, ensuring reliable document retrieval.
 
 </Update>
@@ -84,6 +94,7 @@ This feature is currently in early beta. As it requires retrieving companyProfil
 ## Countries
 
 ### 🇪🇸 Spain
+
 - Fixed financial document listing functionality to correctly retrieve and display available financial documents.
 
 </Update>
@@ -96,26 +107,33 @@ This feature is currently in early beta. As it requires retrieving companyProfil
 - **Fixed performance bottlenecks** when processing companies with large document collections by implementing a **faster inference endpoint** for document metadata processing.
 - **Enhanced performance logging** across the application to better identify and address bottlenecks.
 
-<Note>We are actively working on improving overall performance, with a focus on inference speed optimization. A **faster inference solution** is currently in development.</Note>
+<Note>
+  We are actively working on improving overall performance, with a focus on inference speed optimization. A **faster inference solution** is currently
+  in development.
+</Note>
 
 ## Countries
 
 ### 🇮🇹 Italy
+
 - Added support for asynchronous data retrieval from the Italian Chamber of Commerce (Camerale). As a result, **companyProfile for Italy is now an asynchronous data point**.
 
 ### 🇩🇪 Germany
+
 - Implemented fallback to Handelsregister when Unternehmensregister is unavailable for search and companyProfile.
 
 ### 🇪🇸 Spain
+
 - Improved overall speed and reliability of Spanish company data retrieval through infrastructure optimizations.
 - Added support for asynchronous data retrieval for legalRepresentatives in Spain. Note that base companyProfile data still remains synchronous. This change prevents blocking access to base company data when fetching many legal representatives, which could be time-consuming for companies with extensive representative lists.
 - As a result, **companyProfile for Spain is now a partially asynchronous data point**.
 
 ### 🇨🇳 China
+
 - Improved overall speed and reliability of Chinese company data retrieval through infrastructure optimizations.
 
 ### 🇳🇱 Netherlands
-- Updated document listing functionality to match KVK's new API specifications, restoring the ability to list available documents for Dutch companies.
 
+- Updated document listing functionality to match KVK's new API specifications, restoring the ability to list available documents for Dutch companies.
 
 </Update>
