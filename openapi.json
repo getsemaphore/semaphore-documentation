@@ -12,24 +12,59 @@
             "required": true,
             "in": "query",
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California).",
-            "schema": { "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"], "type": "string" }
+            "schema": {
+              "enum": [
+                "BE",
+                "CH",
+                "CN",
+                "DE",
+                "ES",
+                "FR",
+                "GB",
+                "IT",
+                "NL",
+                "PT",
+                "HK",
+                "LU",
+                "MT"
+              ],
+              "type": "string"
+            }
           },
           {
             "name": "query",
             "required": true,
             "in": "query",
             "description": "The search query, which can be a company name or registration number. Note that search capabilities may vary by country, with some supporting only name or registration number searches.",
-            "schema": { "example": "Semaphore", "type": "string" }
+            "schema": {
+              "example": "Semaphore",
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "List of companies",
-            "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/SearchResultV2" } } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchResultV2"
+                  }
+                }
+              }
+            }
           }
         },
-        "security": [{ "x-api-key": [] }],
-        "tags": ["Search"]
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
+        "tags": [
+          "Search"
+        ]
       }
     },
     "/v2/company": {
@@ -42,18 +77,39 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "oneOf": [{ "$ref": "#/components/schemas/GetCompanyDTO" }, { "$ref": "#/components/schemas/GetCompanyByRequestIdDtoV2" }] }
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/GetCompanyDTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GetCompanyByRequestIdDtoV2"
+                  }
+                ]
+              }
             }
           }
         },
         "responses": {
           "200": {
             "description": "Company information",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetCompanyResultDTO" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompanyResultDTO"
+                }
+              }
+            }
           }
         },
-        "security": [{ "x-api-key": [] }],
-        "tags": ["Data"]
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
+        "tags": [
+          "Data"
+        ]
       }
     },
     "/v2/pricing": {
@@ -62,44 +118,139 @@
         "summary": "Get pricing for a country",
         "description": "This endpoint allows you to retrieve the pricing information for a specific country.\n\nThe response includes:\n- Base price for company searches\n- Pricing for different data points (company profile, UBO, etc.)\n- Document retrieval costs\n- Any country-specific pricing variations\n\nThis can be useful for:\n- Understanding costs before making requests\n- Budgeting and planning purposes\n- Displaying pricing information to end users\n\nNote: Prices are returned in euros (EUR) and may vary based on your subscription plan.",
         "parameters": [],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/GetPricingDTO" } } } },
-        "responses": { "200": { "description": "", "content": { "application/json": { "schema": { "type": "string" } } } } },
-        "security": [{ "x-api-key": [] }],
-        "tags": ["Pricing"]
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPricingDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
+        "tags": [
+          "Pricing"
+        ]
       }
     }
   },
-  "info": { "title": "Semaphore", "description": "The semaphore API", "version": "0.1", "contact": {} },
+  "info": {
+    "title": "Semaphore",
+    "description": "The semaphore API",
+    "version": "0.1",
+    "contact": {}
+  },
   "tags": [],
-  "servers": [{ "url": "https://api.getsemaphore.com" }],
+  "servers": [
+    {
+      "url": "https://api.getsemaphore.com"
+    }
+  ],
   "components": {
-    "securitySchemes": { "x-api-key": { "type": "apiKey", "in": "header", "name": "x-api-key" } },
+    "securitySchemes": {
+      "x-api-key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    },
     "schemas": {
       "AddressDTO": {
         "type": "object",
         "properties": {
-          "addressLine1": { "type": "string", "description": "First line of the address", "example": "10 rue de la Fraternité" },
-          "addressLine2": { "type": "string", "description": "Second line of the address", "example": "Semaphore Building" },
-          "city": { "type": "string", "description": "City of the address", "example": "Bagnolet" },
-          "postalCode": { "type": "string", "description": "Postal code of the address", "example": "93170" },
-          "region": { "type": "string", "description": "Region of the address", "example": "FR" },
-          "countryCode": { "type": "string", "description": "Country of the address using ISO 3166-1 alpha-2 country code", "example": "FR" },
-          "poBox": { "type": "string", "description": "Post Office Box number", "example": "PO Box 123" },
-          "careOf": { "type": "string", "description": "Care of (c/o) recipient", "example": "c/o John Doe" },
-          "state": { "type": "string", "description": "State of the address", "example": "Île-de-France" }
+          "addressLine1": {
+            "type": "string",
+            "description": "First line of the address",
+            "example": "10 rue de la Fraternité"
+          },
+          "addressLine2": {
+            "type": "string",
+            "description": "Second line of the address",
+            "example": "Semaphore Building"
+          },
+          "city": {
+            "type": "string",
+            "description": "City of the address",
+            "example": "Bagnolet"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "Postal code of the address",
+            "example": "93170"
+          },
+          "region": {
+            "type": "string",
+            "description": "Region of the address",
+            "example": "FR"
+          },
+          "countryCode": {
+            "type": "string",
+            "description": "Country of the address using ISO 3166-1 alpha-2 country code",
+            "example": "FR"
+          },
+          "poBox": {
+            "type": "string",
+            "description": "Post Office Box number",
+            "example": "PO Box 123"
+          },
+          "careOf": {
+            "type": "string",
+            "description": "Care of (c/o) recipient",
+            "example": "c/o John Doe"
+          },
+          "state": {
+            "type": "string",
+            "description": "State of the address",
+            "example": "Île-de-France"
+          }
         },
-        "required": ["addressLine1", "city", "postalCode", "region", "countryCode", "state"]
+        "required": [
+          "addressLine1",
+          "city",
+          "postalCode",
+          "region",
+          "countryCode",
+          "state"
+        ]
       },
       "SearchResultV2": {
         "type": "object",
         "properties": {
-          "address": { "description": "The legal address of the company", "allOf": [{ "$ref": "#/components/schemas/AddressDTO" }] },
+          "address": {
+            "description": "The legal address of the company",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            ]
+          },
           "companyNumber": {
             "type": "string",
             "example": "932884117",
             "description": "The company number. In some countries, this might be a concatenation of the registry and city (e.g., in Germany: \"Augsburg HRB 34617\"). The search function will always return a usable company number. Check the documentation to see which number format is used for each country."
           },
-          "legalName": { "type": "string", "description": "Legal name of the company", "example": "SEMAPHORE" },
+          "legalName": {
+            "type": "string",
+            "description": "Legal name of the company",
+            "example": "SEMAPHORE"
+          },
           "legalNameInEnglish": {
             "type": "string",
             "example": "Test Display Hong Kong Trading Limited",
@@ -362,7 +513,12 @@
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
           }
         },
-        "required": ["address", "companyNumber", "legalName", "country"]
+        "required": [
+          "address",
+          "companyNumber",
+          "legalName",
+          "country"
+        ]
       },
       "GetCompanyDTO": {
         "type": "object",
@@ -374,24 +530,54 @@
           },
           "countryCode": {
             "type": "string",
-            "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"],
+            "enum": [
+              "BE",
+              "CH",
+              "CN",
+              "DE",
+              "ES",
+              "FR",
+              "GB",
+              "IT",
+              "NL",
+              "PT",
+              "HK",
+              "LU",
+              "MT"
+            ],
             "example": "FR",
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
           },
           "dataPoints": {
             "type": "array",
-            "items": { "type": "string", "enum": ["companyProfile", "ultimateBeneficialOwners", "availableDocuments"] },
-            "example": ["companyProfile"],
+            "items": {
+              "type": "string",
+              "enum": [
+                "companyProfile",
+                "ultimateBeneficialOwners",
+                "availableDocuments"
+              ]
+            },
+            "example": [
+              "companyProfile"
+            ],
             "description": "The data points to retrieve. Available data points are companyProfile, ultimateBeneficialOwners or availableDocuments."
           },
           "documents": {
             "type": "array",
-            "items": { "type": "string" },
-            "example": ["trade_register_extract"],
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "trade_register_extract"
+            ],
             "description": "There are two ways to retrieve documents:\n\n1. Two-step process:\n   - First, request the \"availableDocuments\" data point to get a list of all available documents with their IDs\n   - Then, use these specific document IDs in a second request\n\n2. Direct access using smart IDs:\n   - Use predefined smart IDs for quick access to common documents:\n     - trade_register_extract: Latest trade register extract\n     - certified_trade_register_extract: Latest certified trade register extract\n     - last_fiscal_year_financial_statement: Latest financial statement\n     - last_consolidated_article_of_association: Latest consolidated articles of association\n\nRefer to our country coverage documentation to check which smart IDs are available for each country."
           }
         },
-        "required": ["id", "countryCode"]
+        "required": [
+          "id",
+          "countryCode"
+        ]
       },
       "GetCompanyByRequestIdDtoV2": {
         "type": "object",
@@ -406,10 +592,21 @@
       "CompanyStatusDTO": {
         "type": "object",
         "properties": {
-          "localName": { "type": "string", "example": "active", "description": "The local status of the company in the local language" },
-          "active": { "type": "boolean", "example": true, "description": "Indicates if the company is active." }
+          "localName": {
+            "type": "string",
+            "example": "active",
+            "description": "The local status of the company in the local language"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true,
+            "description": "Indicates if the company is active."
+          }
         },
-        "required": ["localName", "active"]
+        "required": [
+          "localName",
+          "active"
+        ]
       },
       "LegalFormEnum": {
         "type": "string",
@@ -440,28 +637,55 @@
             "example": "Single Member Limited Liability Company",
             "description": "The English translation of the local legal form."
           },
-          "semaphoreStandard": { "example": "Limited Liability Company", "$ref": "#/components/schemas/LegalFormEnum" },
-          "iso20275Code": { "type": "string", "example": "F8DD", "description": "The ISO 20275 Entity Legal Form code for the company." }
+          "semaphoreStandard": {
+            "example": "Limited Liability Company",
+            "$ref": "#/components/schemas/LegalFormEnum"
+          },
+          "iso20275Code": {
+            "type": "string",
+            "example": "F8DD",
+            "description": "The ISO 20275 Entity Legal Form code for the company."
+          }
         },
-        "required": ["localName", "englishTranslation", "semaphoreStandard", "iso20275Code"]
+        "required": [
+          "localName",
+          "englishTranslation",
+          "semaphoreStandard",
+          "iso20275Code"
+        ]
       },
       "MonetaryAmountDTO": {
         "type": "object",
         "properties": {
-          "amount": { "type": "number", "description": "The numeric amount of money.", "example": 1000 },
-          "currency": { "type": "string", "description": "The ISO 4217 currency code (e.g., EUR, USD).", "example": "EUR" },
+          "amount": {
+            "type": "number",
+            "description": "The numeric amount of money.",
+            "example": 1000
+          },
+          "currency": {
+            "type": "string",
+            "description": "The ISO 4217 currency code (e.g., EUR, USD).",
+            "example": "EUR"
+          },
           "formatted": {
             "type": "string",
             "description": "Formatted string representation of the monetary amount in the local format",
             "example": "1000.00 €"
           }
         },
-        "required": ["amount", "currency"]
+        "required": [
+          "amount",
+          "currency"
+        ]
       },
       "CompanyDTO": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "The id of the company, see documentation.", "example": "932884117" },
+          "id": {
+            "type": "string",
+            "description": "The id of the company, see documentation.",
+            "example": "932884117"
+          },
           "countryCode": {
             "type": "string",
             "enum": [
@@ -720,77 +944,178 @@
           },
           "identifiers": {
             "type": "object",
-            "additionalProperties": { "type": "string" },
+            "additionalProperties": {
+              "type": "string"
+            },
             "description": "A dictionary of different identifiers for the company",
-            "example": { "SIREN": "932884117", "VAT": "FR42932884117" }
+            "example": {
+              "SIREN": "932884117",
+              "VAT": "FR42932884117"
+            }
           },
-          "legalName": { "type": "string", "example": "Semaphore", "description": "The legal name of the company." },
+          "legalName": {
+            "type": "string",
+            "example": "Semaphore",
+            "description": "The legal name of the company."
+          },
           "legalNameInEnglish": {
             "type": "string",
             "example": "Test Display Hong Kong Trading Limited",
             "description": "The English translation or romanization of the legal name, commonly used for international business. Particularly relevant for companies registered with non-Latin alphabet names (e.g., Chinese, Japanese, Korean, etc.)."
           },
           "commercialNames": {
-            "example": ["Semaphore", "SemaphoreHQ"],
+            "example": [
+              "Semaphore",
+              "SemaphoreHQ"
+            ],
             "description": "An array of commercial names or trading names used by the company.",
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "status": {
             "description": "The status of the company, including local status and whether it is active.",
-            "allOf": [{ "$ref": "#/components/schemas/CompanyStatusDTO" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyStatusDTO"
+              }
+            ]
           },
-          "registrationDate": { "type": "string", "example": "2024-04-22", "description": "The registration date of the company." },
+          "registrationDate": {
+            "type": "string",
+            "example": "2024-04-22",
+            "description": "The registration date of the company."
+          },
           "legalForm": {
             "description": "The legal form of the company, including local and standard forms.",
-            "allOf": [{ "$ref": "#/components/schemas/LegalFormDTO" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LegalFormDTO"
+              }
+            ]
           },
-          "capital": { "description": "The share capital of the company.", "allOf": [{ "$ref": "#/components/schemas/MonetaryAmountDTO" }] },
+          "capital": {
+            "description": "The share capital of the company.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MonetaryAmountDTO"
+              }
+            ]
+          },
           "activities": {
             "type": "object",
             "description": "A dictionary of activity classifications",
             "example": {
-              "NACE": [{ "code": "62.01", "description": "Computer programming activities" }],
-              "ISIC": [{ "code": "J620", "description": "Computer programming, consultancy and related activities" }]
+              "NACE": [
+                {
+                  "code": "62.01",
+                  "description": "Computer programming activities"
+                }
+              ],
+              "ISIC": [
+                {
+                  "code": "J620",
+                  "description": "Computer programming, consultancy and related activities"
+                }
+              ]
             },
-            "additionalProperties": { "type": "array", "items": { "$ref": "#/components/schemas/CompanyActivityItemDTO" } }
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CompanyActivityItemDTO"
+              }
+            }
           },
           "activityDescription": {
             "type": "string",
             "description": "A text description of the company activities",
             "example": "Development of software solutions and IT consulting services"
           },
-          "legalAddress": { "description": "The address of the company.", "allOf": [{ "$ref": "#/components/schemas/AddressDTO" }] }
+          "legalAddress": {
+            "description": "The address of the company.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            ]
+          }
         },
-        "required": ["id", "countryCode"]
+        "required": [
+          "id",
+          "countryCode"
+        ]
       },
       "PersonNameDTO": {
         "type": "object",
         "properties": {
-          "title": { "type": "string", "description": "Title of the person (e.g., Mr., Mrs., Dr.)" },
-          "firstName": { "type": "string", "description": "First name of the person" },
-          "middleName": { "type": "string", "description": "Middle name of the person" },
-          "lastName": { "type": "string", "description": "Last name of the person" },
-          "fullName": { "type": "string", "description": "Full name of the person" },
-          "suffix": { "type": "string", "description": "Suffix of the name (e.g., Jr., Sr., III)" }
+          "title": {
+            "type": "string",
+            "description": "Title of the person (e.g., Mr., Mrs., Dr.)"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name of the person"
+          },
+          "middleName": {
+            "type": "string",
+            "description": "Middle name of the person"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name of the person"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "Full name of the person"
+          },
+          "suffix": {
+            "type": "string",
+            "description": "Suffix of the name (e.g., Jr., Sr., III)"
+          }
         },
-        "required": ["fullName"]
+        "required": [
+          "fullName"
+        ]
       },
       "BirthDateDTO": {
         "type": "object",
         "properties": {
-          "day": { "type": "number", "description": "Day of birth (1-31)", "example": 15 },
-          "month": { "type": "number", "description": "Month of birth (1-12), where January is 1", "example": 7 },
-          "year": { "type": "number", "description": "Year of birth", "example": 1980 }
+          "day": {
+            "type": "number",
+            "description": "Day of birth (1-31)",
+            "example": 15
+          },
+          "month": {
+            "type": "number",
+            "description": "Month of birth (1-12), where January is 1",
+            "example": 7
+          },
+          "year": {
+            "type": "number",
+            "description": "Year of birth",
+            "example": 1980
+          }
         }
       },
       "RangeDto": {
         "type": "object",
         "properties": {
-          "lower": { "type": "number", "description": "Lower bound of the range", "example": 25 },
-          "upper": { "type": "number", "description": "Upper bound of the range", "example": 50 }
+          "lower": {
+            "type": "number",
+            "description": "Lower bound of the range",
+            "example": 25
+          },
+          "upper": {
+            "type": "number",
+            "description": "Upper bound of the range",
+            "example": 50
+          }
         },
-        "required": ["lower", "upper"]
+        "required": [
+          "lower",
+          "upper"
+        ]
       },
       "PercentageDetailDto": {
         "type": "object",
@@ -798,28 +1123,58 @@
           "type": {
             "type": "string",
             "description": "Type of percentage detail (shares, voting rights)",
-            "enum": ["shares", "voting-rights"],
+            "enum": [
+              "shares",
+              "voting-rights"
+            ],
             "example": "shares"
           },
           "percentageRange": {
             "description": "Range of control as a lower and upper bound",
-            "example": { "lower": 25, "upper": 50 },
-            "allOf": [{ "$ref": "#/components/schemas/RangeDto" }]
+            "example": {
+              "lower": 25,
+              "upper": 50
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RangeDto"
+              }
+            ]
           },
-          "percentageValue": { "type": "number", "description": "Exact percentage of control", "example": 30 },
+          "percentageValue": {
+            "type": "number",
+            "description": "Exact percentage of control",
+            "example": 30
+          },
           "monetaryAmount": {
             "description": "Monetary amount of shares controlled",
-            "allOf": [{ "$ref": "#/components/schemas/MonetaryAmountDTO" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MonetaryAmountDTO"
+              }
+            ]
           },
-          "numberOfShares": { "type": "number", "description": "Number of shares controlled", "example": 1000 },
+          "numberOfShares": {
+            "type": "number",
+            "description": "Number of shares controlled",
+            "example": 1000
+          },
           "nature": {
             "type": "string",
             "description": "Indicates whether the control is direct or indirect",
-            "enum": ["direct", "indirect"],
+            "enum": [
+              "direct",
+              "indirect"
+            ],
             "example": "direct"
           }
         },
-        "required": ["type", "percentageRange", "percentageValue", "monetaryAmount"]
+        "required": [
+          "type",
+          "percentageRange",
+          "percentageValue",
+          "monetaryAmount"
+        ]
       },
       "ControlDTO": {
         "type": "object",
@@ -829,9 +1184,16 @@
             "description": "Types of control held by the beneficial owner",
             "items": {
               "type": "string",
-              "enum": ["ownership-of-shares", "voting-rights", "appoint-and-remove-directors", "significant-influence-or-control"]
+              "enum": [
+                "ownership-of-shares",
+                "voting-rights",
+                "appoint-and-remove-directors",
+                "significant-influence-or-control"
+              ]
             },
-            "example": ["ownership-of-shares"]
+            "example": [
+              "ownership-of-shares"
+            ]
           },
           "description": {
             "type": "string",
@@ -841,10 +1203,16 @@
           "details": {
             "description": "Details about the percentage of control",
             "type": "array",
-            "items": { "$ref": "#/components/schemas/PercentageDetailDto" }
+            "items": {
+              "$ref": "#/components/schemas/PercentageDetailDto"
+            }
           }
         },
-        "required": ["types", "description", "details"]
+        "required": [
+          "types",
+          "description",
+          "details"
+        ]
       },
       "UltimateBeneficialOwnerDTO": {
         "type": "object",
@@ -852,38 +1220,97 @@
           "gender": {
             "type": "string",
             "description": "Gender of the person",
-            "enum": ["Male", "Female", "Other", "PreferNotToSay"],
+            "enum": [
+              "Male",
+              "Female",
+              "Other",
+              "PreferNotToSay"
+            ],
             "example": "Female"
           },
           "name": {
             "description": "Full name of the person",
-            "example": { "fullName": "John Doe" },
-            "allOf": [{ "$ref": "#/components/schemas/PersonNameDTO" }]
+            "example": {
+              "fullName": "John Doe"
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PersonNameDTO"
+              }
+            ]
           },
           "birthDate": {
             "description": "Birth date of the person",
-            "example": { "day": 15, "month": 7, "year": 1980 },
-            "allOf": [{ "$ref": "#/components/schemas/BirthDateDTO" }]
+            "example": {
+              "day": 15,
+              "month": 7,
+              "year": 1980
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BirthDateDTO"
+              }
+            ]
           },
           "birthAddress": {
             "description": "Birth address of the person",
-            "example": { "country": "FR", "city": "Paris", "street": "1 Rue de Rivoli", "postalCode": "75001" },
-            "allOf": [{ "$ref": "#/components/schemas/AddressDTO" }]
+            "example": {
+              "country": "FR",
+              "city": "Paris",
+              "street": "1 Rue de Rivoli",
+              "postalCode": "75001"
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            ]
           },
-          "nationality": { "type": "string", "description": "Nationality ISO2 country code of the person", "example": "US" },
-          "residenceAddress": { "description": "Residence address of the person", "allOf": [{ "$ref": "#/components/schemas/AddressDTO" }] },
+          "nationality": {
+            "type": "string",
+            "description": "Nationality ISO2 country code of the person",
+            "example": "US"
+          },
+          "residenceAddress": {
+            "description": "Residence address of the person",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            ]
+          },
           "control": {
             "description": "Details of control held by the beneficial owner",
             "example": {
               "controlType": "ownership-of-shares",
               "description": "The person holds more than 50% of the shares in the company.",
-              "percentageDetails": [{ "type": "shares", "range": { "lower": 50, "upper": 75 } }],
+              "percentageDetails": [
+                {
+                  "type": "shares",
+                  "range": {
+                    "lower": 50,
+                    "upper": 75
+                  }
+                }
+              ],
               "additionalDetails": "Direct ownership of shares"
             },
-            "allOf": [{ "$ref": "#/components/schemas/ControlDTO" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ControlDTO"
+              }
+            ]
           }
         },
-        "required": ["gender", "name", "birthDate", "birthAddress", "nationality", "residenceAddress", "control"]
+        "required": [
+          "gender",
+          "name",
+          "birthDate",
+          "birthAddress",
+          "nationality",
+          "residenceAddress",
+          "control"
+        ]
       },
       "RoleEnum": {
         "type": "string",
@@ -908,12 +1335,29 @@
       "RoleDTO": {
         "type": "object",
         "properties": {
-          "localName": { "type": "string", "description": "The local role name in the local language", "example": "Directeur" },
-          "englishName": { "type": "string", "description": "The role name in English", "example": "Director" },
-          "iso5009Code": { "type": "string", "description": "The ISO 5009 role code", "example": "GIDXNF" },
-          "semaphoreStandard": { "example": "Director", "$ref": "#/components/schemas/RoleEnum" }
+          "localName": {
+            "type": "string",
+            "description": "The local role name in the local language",
+            "example": "Directeur"
+          },
+          "englishName": {
+            "type": "string",
+            "description": "The role name in English",
+            "example": "Director"
+          },
+          "iso5009Code": {
+            "type": "string",
+            "description": "The ISO 5009 role code",
+            "example": "GIDXNF"
+          },
+          "semaphoreStandard": {
+            "example": "Director",
+            "$ref": "#/components/schemas/RoleEnum"
+          }
         },
-        "required": ["semaphoreStandard"]
+        "required": [
+          "semaphoreStandard"
+        ]
       },
       "PhysicalPersonBaseDTO": {
         "type": "object",
@@ -921,48 +1365,125 @@
           "gender": {
             "type": "string",
             "description": "Gender of the person",
-            "enum": ["Male", "Female", "Other", "PreferNotToSay"],
+            "enum": [
+              "Male",
+              "Female",
+              "Other",
+              "PreferNotToSay"
+            ],
             "example": "Female"
           },
           "name": {
             "description": "Full name of the person",
-            "example": { "fullName": "John Doe" },
-            "allOf": [{ "$ref": "#/components/schemas/PersonNameDTO" }]
+            "example": {
+              "fullName": "John Doe"
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PersonNameDTO"
+              }
+            ]
           },
           "birthDate": {
             "description": "Birth date of the person",
-            "example": { "day": 15, "month": 7, "year": 1980 },
-            "allOf": [{ "$ref": "#/components/schemas/BirthDateDTO" }]
+            "example": {
+              "day": 15,
+              "month": 7,
+              "year": 1980
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BirthDateDTO"
+              }
+            ]
           },
           "birthAddress": {
             "description": "Birth address of the person",
-            "example": { "country": "FR", "city": "Paris", "street": "1 Rue de Rivoli", "postalCode": "75001" },
-            "allOf": [{ "$ref": "#/components/schemas/AddressDTO" }]
+            "example": {
+              "country": "FR",
+              "city": "Paris",
+              "street": "1 Rue de Rivoli",
+              "postalCode": "75001"
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            ]
           },
-          "nationality": { "type": "string", "description": "Nationality ISO2 country code of the person", "example": "US" },
-          "residenceAddress": { "description": "Residence address of the person", "allOf": [{ "$ref": "#/components/schemas/AddressDTO" }] }
+          "nationality": {
+            "type": "string",
+            "description": "Nationality ISO2 country code of the person",
+            "example": "US"
+          },
+          "residenceAddress": {
+            "description": "Residence address of the person",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            ]
+          }
         },
-        "required": ["gender", "name", "birthDate", "birthAddress", "nationality", "residenceAddress"]
+        "required": [
+          "gender",
+          "name",
+          "birthDate",
+          "birthAddress",
+          "nationality",
+          "residenceAddress"
+        ]
       },
       "LegalRepresentativeDTO": {
         "type": "object",
         "properties": {
-          "role": { "description": "The role of the legal representative", "allOf": [{ "$ref": "#/components/schemas/RoleDTO" }] },
-          "startDate": { "type": "string", "description": "The start date of the legal representative's role", "example": "2022-01-01" },
-          "endDate": { "type": "string", "description": "The end date of the legal representative's role (if applicable)", "example": "2023-12-31" },
+          "role": {
+            "description": "The role of the legal representative",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RoleDTO"
+              }
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The start date of the legal representative's role",
+            "example": "2022-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "The end date of the legal representative's role (if applicable)",
+            "example": "2023-12-31"
+          },
           "type": {
             "type": "string",
             "description": "The type of the legal representative (individual or company)",
-            "enum": ["individual", "company"],
+            "enum": [
+              "individual",
+              "company"
+            ],
             "example": "individual"
           },
           "individual": {
             "description": "Details of the individual legal representative",
-            "allOf": [{ "$ref": "#/components/schemas/PhysicalPersonBaseDTO" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PhysicalPersonBaseDTO"
+              }
+            ]
           },
-          "company": { "description": "Details of the company legal representative", "allOf": [{ "$ref": "#/components/schemas/CompanyDTO" }] }
+          "company": {
+            "description": "Details of the company legal representative",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyDTO"
+              }
+            ]
+          }
         },
-        "required": ["type"]
+        "required": [
+          "type"
+        ]
       },
       "ShareholderDTO": {
         "type": "object",
@@ -970,36 +1491,108 @@
           "type": {
             "type": "string",
             "description": "The type of the shareholder (individual or company)",
-            "enum": ["individual", "company"],
+            "enum": [
+              "individual",
+              "company"
+            ],
             "example": "individual"
           },
           "individual": {
             "description": "Details of the individual shareholder",
-            "allOf": [{ "$ref": "#/components/schemas/PhysicalPersonBaseDTO" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PhysicalPersonBaseDTO"
+              }
+            ]
           },
-          "company": { "description": "Details of the company shareholder", "allOf": [{ "$ref": "#/components/schemas/CompanyDTO" }] },
-          "sharePercentage": { "type": "number", "description": "The percentage of shares owned by the shareholder", "example": 25.5 },
-          "numberOfShares": { "type": "number", "description": "The absolute number of shares owned by the shareholder", "example": 1000 }
+          "company": {
+            "description": "Details of the company shareholder",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyDTO"
+              }
+            ]
+          },
+          "sharePercentage": {
+            "type": "number",
+            "description": "The percentage of shares owned by the shareholder",
+            "example": 25.5
+          },
+          "numberOfShares": {
+            "type": "number",
+            "description": "The absolute number of shares owned by the shareholder",
+            "example": 1000
+          }
         },
-        "required": ["type"]
+        "required": [
+          "type"
+        ]
+      },
+      "EstablishmentDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the establishment",
+            "example": "Main Office"
+          },
+          "creationDate": {
+            "type": "string",
+            "description": "The creation date of the establishment",
+            "example": "2020-01-15"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "The closing date of the establishment (if applicable)",
+            "example": "2023-12-31"
+          },
+          "address": {
+            "description": "The address of the establishment",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ]
       },
       "AvailableDocumentDTO": {
         "type": "object",
         "properties": {
-          "format": { "type": "string", "description": "Document format (ISO format)", "example": "PDF" },
+          "format": {
+            "type": "string",
+            "description": "Document format (ISO format)",
+            "example": "PDF"
+          },
           "description": {
             "type": "string",
             "description": "Document description",
             "example": "Uncertified trade register extract, provided by the French INPI"
           },
-          "availabilityDelay": { "type": "number", "description": "Availability delay in minutes", "example": 0 },
-          "name": { "type": "string", "description": "Document name in the original language", "example": "Certificat INPI" },
+          "availabilityDelay": {
+            "type": "number",
+            "description": "Availability delay in minutes",
+            "example": 0
+          },
+          "name": {
+            "type": "string",
+            "description": "Document name in the original language",
+            "example": "Certificat INPI"
+          },
           "id": {
             "type": "string",
             "description": "Document ID. This can be either a random ID specific to this document, or a stable quick access ID like \"trade_register_extract\" or \"last_available_financial_statement\". Stable IDs enable quick access to specific documents without querying available_documents first. Refer to our country coverage documentation to check which quick access IDs are available for each country.",
             "example": "trade_register_extract"
           },
-          "date": { "format": "date-time", "type": "string", "description": "Document date", "example": "2024-06-31T23:59:59Z" },
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Document date",
+            "example": "2024-06-31T23:59:59Z"
+          },
           "type": {
             "type": "string",
             "description": "Document type",
@@ -1015,9 +1608,17 @@
             ],
             "example": "uncertified_trade_register_extract"
           },
-          "price": { "type": "number", "description": "Document price, in credits", "example": 3 }
+          "price": {
+            "type": "number",
+            "description": "Document price, in credits",
+            "example": 3
+          }
         },
-        "required": ["name", "id", "type"]
+        "required": [
+          "name",
+          "id",
+          "type"
+        ]
       },
       "DocumentDTO": {
         "type": "object",
@@ -1032,22 +1633,42 @@
             "description": "Temporary document download URL with a 15-minute lifetime. If the URL expires, you can request the same document again within 24 hours without being charged.",
             "example": "https://example.com/download/document123"
           },
-          "blobName": { "type": "string", "description": "Blob name", "example": "document123.pdf" }
+          "blobName": {
+            "type": "string",
+            "description": "Blob name",
+            "example": "document123.pdf"
+          }
         },
-        "required": ["id", "url", "blobName"]
+        "required": [
+          "id",
+          "url",
+          "blobName"
+        ]
       },
       "CompanyActivityItemDTO": {
         "type": "object",
         "properties": {
-          "code": { "type": "string", "description": "The activity code", "example": "62.01" },
-          "description": { "type": "string", "description": "The description of the activity", "example": "Computer programming activities" },
+          "code": {
+            "type": "string",
+            "description": "The activity code",
+            "example": "62.01"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the activity",
+            "example": "Computer programming activities"
+          },
           "isAIInferred": {
             "type": "boolean",
             "description": "Indicates whether the activity code comes from an official source or has been inferred by AI",
             "example": true
           }
         },
-        "required": ["code", "description", "isAIInferred"]
+        "required": [
+          "code",
+          "description",
+          "isAIInferred"
+        ]
       },
       "CompnanyActivitiesDTO": {
         "type": "object",
@@ -1055,734 +1676,225 @@
           "ISIC": {
             "description": "The ISIC activity codes of the company, as deep as possible",
             "type": "array",
-            "items": { "$ref": "#/components/schemas/CompanyActivityItemDTO" }
+            "items": {
+              "$ref": "#/components/schemas/CompanyActivityItemDTO"
+            }
           }
         }
       },
       "DocumentWithUrlDto": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "nameInEnglish": { "type": "string" },
-          "description": { "type": "string" },
-          "descriptionInEnglish": { "type": "string" },
-          "format": { "type": "string" },
-          "estimatedDeliverySeconds": { "type": "number" },
-          "sku": {
-            "type": "string",
-            "enum": [
-              "abw-certified-register-extract",
-              "abw-register-extract",
-              "alb-register-extract",
-              "are-company-data",
-              "arg-register-extract",
-              "arm-certified-register-extract",
-              "arm-register-extract",
-              "aus-certified-register-extract",
-              "aus-register-extract",
-              "aut-certified-register-extract",
-              "aut-register-extract",
-              "aze-register-extract",
-              "bel-certified-register-extract",
-              "bel-company-data",
-              "bel-financial-statements",
-              "bel-other-documents",
-              "bel-status",
-              "bel-ubo-data",
-              "bel-ubo-form",
-              "bel-trade-register-extract",
-              "bes-sa-register-extract",
-              "bes-se-register-extract",
-              "bgd-register-extract",
-              "bgr-register-extract",
-              "bgr-ubo-form",
-              "bhr-register-extract",
-              "bih-register-extract",
-              "blr-register-extract",
-              "blz-register-extract",
-              "bol-register-extract",
-              "bra-company-data",
-              "bra-register-extract",
-              "brb-register-extract",
-              "brn-register-extract",
-              "bwa-register-extract",
-              "can-register-extract",
-              "che-certified-register-extract",
-              "che-company-data",
-              "che-other-documents",
-              "chn-certified-register-extract",
-              "chn-company-data",
-              "chn-ubo-data",
-              "chn-ubo-form",
-              "col-certified-register-extract",
-              "cri-register-extract",
-              "cuw-register-extract",
-              "cym-certified-register-extract",
-              "cym-other",
-              "cym-register-extract",
-              "cyp-certified-register-extract",
-              "cyp-company-data",
-              "cyp-other",
-              "cyp-register-extract",
-              "deu-register-extract",
-              "deu-company-data",
-              "deu-financial-statements",
-              "deu-status",
-              "deu-ubo-data",
-              "deu-ubo-form",
-              "dnk-company-data",
-              "dnk-register-extract",
-              "dom-register-extract",
-              "esp-company-data",
-              "esp-financial-statements",
-              "esp-register-extract",
-              "esp-status",
-              "esp-ubo-data",
-              "esp-ubo-form",
-              "est-company-data",
-              "fin-company-data",
-              "fin-register-extract",
-              "fra-certified-register-extract",
-              "fra-company-data",
-              "fra-financial-statements",
-              "fra-other-documents",
-              "fra-register-extract",
-              "fra-status",
-              "fra-ubo-data",
-              "fra-ubo-form",
-              "gbr-company-data",
-              "gbr-financial-statements",
-              "gbr-other-documents",
-              "gbr-register-extract",
-              "gbr-status",
-              "gbr-ubo-data",
-              "gbr-ubo-form",
-              "ggy-company-data",
-              "gha-register-extract",
-              "gib-company-data",
-              "grc-company-data",
-              "gsy -certified-register-extract",
-              "hkg-company-profile",
-              "hkg-register-extract",
-              "hrv-certified-register-extract",
-              "hrv-register-extract",
-              "hun-certified-register-extract",
-              "idn-register-extract",
-              "imn-register-extract",
-              "ind-company-data",
-              "ind-register-extract",
-              "irl-company-data",
-              "isl-register-extract",
-              "isr-register-extract",
-              "ita-certified-register-extract",
-              "ita-company-data",
-              "ita-financial-statements",
-              "jey-company-data",
-              "jor-register-extract",
-              "jpn-company-data",
-              "khm-register-extract",
-              "kwt-register-extract",
-              "lie-certified-register-extract",
-              "lie-register-extract",
-              "lka-register-extract",
-              "lso-register-extract",
-              "ltu-company-data",
-              "lux-company-data",
-              "lux-register-extract",
-              "lva-company-data",
-              "mar-certified-register-extract",
-              "mar-register-extract",
-              "mhl-register-extract",
-              "mkd-company-data",
-              "mlt-company-data",
-              "mmr-register-extract",
-              "mus-register-extract",
-              "mys-company-data",
-              "mys-register-extract",
-              "nld-certified-register-extract",
-              "nld-company-data",
-              "nld-financial-statements",
-              "nld-other-documents",
-              "nld-register-extract",
-              "nld-status",
-              "nor-company-data",
-              "nzl-company-data",
-              "pak-register-extract",
-              "per-register-extract",
-              "phl-register-extract",
-              "pol-certified-register-extract",
-              "pri-register-extract",
-              "prt-certified-register-extract",
-              "prt-status",
-              "prt-company-data",
-              "prt-ubo-data",
-              "prt-ubo-form",
-              "qat-register-extract",
-              "rou-certified-register-extract",
-              "rou-register-extract",
-              "rus-register-extract",
-              "scg-register-extract",
-              "sgp-certified-register-extract",
-              "sgp-company-data",
-              "slb-register-extract",
-              "svk-certified-register-extract",
-              "svn-company-data",
-              "svn-register-extract",
-              "swe-company-data",
-              "tha-register-extract",
-              "ton-register-extract",
-              "tto-register-extract",
-              "tun-certified-register-extract",
-              "tun-register-extract",
-              "twn-company-data",
-              "twn-register-extract",
-              "uga-register-extract",
-              "ury-register-extract",
-              "us-ca-company-data",
-              "us-ri-company-data",
-              "usa-co-company-data",
-              "usa-ct-company-data",
-              "usa-de-company-data",
-              "usa-fl-company-data",
-              "usa-ge-register-extract",
-              "usa-ia-company-data",
-              "usa-id-company-data",
-              "usa-il-company-data",
-              "usa-in-company-data",
-              "usa-ky-company-data",
-              "usa-la-company-data",
-              "usa-me-company-data",
-              "usa-mn-company-data",
-              "usa-mo-company-data",
-              "usa-mt-company-data",
-              "usa-nc-company-data",
-              "usa-nd-company-data",
-              "usa-nh-company-data",
-              "usa-nj-company-data",
-              "usa-nm-company-data",
-              "usa-nv-company-data",
-              "usa-ny-company-data",
-              "usa-oh-company-data",
-              "usa-ok-company-data",
-              "usa-or-register-extract",
-              "usa-pa-company-data",
-              "usa-sc-company-data",
-              "usa-sd-company-data",
-              "usa-tn-company-data",
-              "usa-tx-company-data",
-              "usa-ut-register-extract",
-              "usa-va-company-data",
-              "usa-wa-company-data",
-              "usa-wi-company-data",
-              "usa-wv-company-data",
-              "usa-wy-company-data",
-              "vgb-register-extract",
-              "vir-register-extract",
-              "vnm-certified-register-extract",
-              "vut-register-extract",
-              "wsm-register-extract",
-              "free",
-              "che-ubo-data"
-            ]
+          "id": {
+            "type": "string"
           },
-          "url": { "type": "string" },
-          "blobName": { "type": "string" },
-          "price": { "type": "number", "description": "Fixed price in cents" },
-          "priceMarkup": { "type": "number", "description": "Price markup percentage" }
+          "name": {
+            "type": "string"
+          },
+          "nameInEnglish": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "descriptionInEnglish": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          },
+          "estimatedDeliverySeconds": {
+            "type": "number"
+          },
+          "url": {
+            "type": "string"
+          },
+          "blobName": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "description": "Fixed price in cents"
+          },
+          "priceMarkup": {
+            "type": "number",
+            "description": "Price markup percentage"
+          }
         },
-        "required": ["id", "name", "format", "sku"]
+        "required": [
+          "id",
+          "name",
+          "format"
+        ]
       },
       "PeriodDateDTO": {
         "type": "object",
-        "properties": { "year": { "type": "number" }, "month": { "type": "number" }, "day": { "type": "number" } }
+        "properties": {
+          "year": {
+            "type": "number"
+          },
+          "month": {
+            "type": "number"
+          },
+          "day": {
+            "type": "number"
+          }
+        }
       },
       "PeriodDTO": {
         "type": "object",
-        "properties": { "startDate": { "$ref": "#/components/schemas/PeriodDateDTO" }, "endDate": { "$ref": "#/components/schemas/PeriodDateDTO" } }
+        "properties": {
+          "startDate": {
+            "$ref": "#/components/schemas/PeriodDateDTO"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/PeriodDateDTO"
+          }
+        }
       },
       "FinancialStatementDTO": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "nameInEnglish": { "type": "string" },
-          "description": { "type": "string" },
-          "descriptionInEnglish": { "type": "string" },
-          "format": { "type": "string" },
-          "estimatedDeliverySeconds": { "type": "number" },
-          "sku": {
-            "type": "string",
-            "enum": [
-              "abw-certified-register-extract",
-              "abw-register-extract",
-              "alb-register-extract",
-              "are-company-data",
-              "arg-register-extract",
-              "arm-certified-register-extract",
-              "arm-register-extract",
-              "aus-certified-register-extract",
-              "aus-register-extract",
-              "aut-certified-register-extract",
-              "aut-register-extract",
-              "aze-register-extract",
-              "bel-certified-register-extract",
-              "bel-company-data",
-              "bel-financial-statements",
-              "bel-other-documents",
-              "bel-status",
-              "bel-ubo-data",
-              "bel-ubo-form",
-              "bel-trade-register-extract",
-              "bes-sa-register-extract",
-              "bes-se-register-extract",
-              "bgd-register-extract",
-              "bgr-register-extract",
-              "bgr-ubo-form",
-              "bhr-register-extract",
-              "bih-register-extract",
-              "blr-register-extract",
-              "blz-register-extract",
-              "bol-register-extract",
-              "bra-company-data",
-              "bra-register-extract",
-              "brb-register-extract",
-              "brn-register-extract",
-              "bwa-register-extract",
-              "can-register-extract",
-              "che-certified-register-extract",
-              "che-company-data",
-              "che-other-documents",
-              "chn-certified-register-extract",
-              "chn-company-data",
-              "chn-ubo-data",
-              "chn-ubo-form",
-              "col-certified-register-extract",
-              "cri-register-extract",
-              "cuw-register-extract",
-              "cym-certified-register-extract",
-              "cym-other",
-              "cym-register-extract",
-              "cyp-certified-register-extract",
-              "cyp-company-data",
-              "cyp-other",
-              "cyp-register-extract",
-              "deu-register-extract",
-              "deu-company-data",
-              "deu-financial-statements",
-              "deu-status",
-              "deu-ubo-data",
-              "deu-ubo-form",
-              "dnk-company-data",
-              "dnk-register-extract",
-              "dom-register-extract",
-              "esp-company-data",
-              "esp-financial-statements",
-              "esp-register-extract",
-              "esp-status",
-              "esp-ubo-data",
-              "esp-ubo-form",
-              "est-company-data",
-              "fin-company-data",
-              "fin-register-extract",
-              "fra-certified-register-extract",
-              "fra-company-data",
-              "fra-financial-statements",
-              "fra-other-documents",
-              "fra-register-extract",
-              "fra-status",
-              "fra-ubo-data",
-              "fra-ubo-form",
-              "gbr-company-data",
-              "gbr-financial-statements",
-              "gbr-other-documents",
-              "gbr-register-extract",
-              "gbr-status",
-              "gbr-ubo-data",
-              "gbr-ubo-form",
-              "ggy-company-data",
-              "gha-register-extract",
-              "gib-company-data",
-              "grc-company-data",
-              "gsy -certified-register-extract",
-              "hkg-company-profile",
-              "hkg-register-extract",
-              "hrv-certified-register-extract",
-              "hrv-register-extract",
-              "hun-certified-register-extract",
-              "idn-register-extract",
-              "imn-register-extract",
-              "ind-company-data",
-              "ind-register-extract",
-              "irl-company-data",
-              "isl-register-extract",
-              "isr-register-extract",
-              "ita-certified-register-extract",
-              "ita-company-data",
-              "ita-financial-statements",
-              "jey-company-data",
-              "jor-register-extract",
-              "jpn-company-data",
-              "khm-register-extract",
-              "kwt-register-extract",
-              "lie-certified-register-extract",
-              "lie-register-extract",
-              "lka-register-extract",
-              "lso-register-extract",
-              "ltu-company-data",
-              "lux-company-data",
-              "lux-register-extract",
-              "lva-company-data",
-              "mar-certified-register-extract",
-              "mar-register-extract",
-              "mhl-register-extract",
-              "mkd-company-data",
-              "mlt-company-data",
-              "mmr-register-extract",
-              "mus-register-extract",
-              "mys-company-data",
-              "mys-register-extract",
-              "nld-certified-register-extract",
-              "nld-company-data",
-              "nld-financial-statements",
-              "nld-other-documents",
-              "nld-register-extract",
-              "nld-status",
-              "nor-company-data",
-              "nzl-company-data",
-              "pak-register-extract",
-              "per-register-extract",
-              "phl-register-extract",
-              "pol-certified-register-extract",
-              "pri-register-extract",
-              "prt-certified-register-extract",
-              "prt-status",
-              "prt-company-data",
-              "prt-ubo-data",
-              "prt-ubo-form",
-              "qat-register-extract",
-              "rou-certified-register-extract",
-              "rou-register-extract",
-              "rus-register-extract",
-              "scg-register-extract",
-              "sgp-certified-register-extract",
-              "sgp-company-data",
-              "slb-register-extract",
-              "svk-certified-register-extract",
-              "svn-company-data",
-              "svn-register-extract",
-              "swe-company-data",
-              "tha-register-extract",
-              "ton-register-extract",
-              "tto-register-extract",
-              "tun-certified-register-extract",
-              "tun-register-extract",
-              "twn-company-data",
-              "twn-register-extract",
-              "uga-register-extract",
-              "ury-register-extract",
-              "us-ca-company-data",
-              "us-ri-company-data",
-              "usa-co-company-data",
-              "usa-ct-company-data",
-              "usa-de-company-data",
-              "usa-fl-company-data",
-              "usa-ge-register-extract",
-              "usa-ia-company-data",
-              "usa-id-company-data",
-              "usa-il-company-data",
-              "usa-in-company-data",
-              "usa-ky-company-data",
-              "usa-la-company-data",
-              "usa-me-company-data",
-              "usa-mn-company-data",
-              "usa-mo-company-data",
-              "usa-mt-company-data",
-              "usa-nc-company-data",
-              "usa-nd-company-data",
-              "usa-nh-company-data",
-              "usa-nj-company-data",
-              "usa-nm-company-data",
-              "usa-nv-company-data",
-              "usa-ny-company-data",
-              "usa-oh-company-data",
-              "usa-ok-company-data",
-              "usa-or-register-extract",
-              "usa-pa-company-data",
-              "usa-sc-company-data",
-              "usa-sd-company-data",
-              "usa-tn-company-data",
-              "usa-tx-company-data",
-              "usa-ut-register-extract",
-              "usa-va-company-data",
-              "usa-wa-company-data",
-              "usa-wi-company-data",
-              "usa-wv-company-data",
-              "usa-wy-company-data",
-              "vgb-register-extract",
-              "vir-register-extract",
-              "vnm-certified-register-extract",
-              "vut-register-extract",
-              "wsm-register-extract",
-              "free",
-              "che-ubo-data"
-            ]
+          "id": {
+            "type": "string"
           },
-          "url": { "type": "string" },
-          "blobName": { "type": "string" },
-          "price": { "type": "number", "description": "Fixed price in cents" },
-          "priceMarkup": { "type": "number", "description": "Price markup percentage" },
-          "period": { "$ref": "#/components/schemas/PeriodDTO" }
+          "name": {
+            "type": "string"
+          },
+          "nameInEnglish": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "descriptionInEnglish": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          },
+          "estimatedDeliverySeconds": {
+            "type": "number"
+          },
+          "url": {
+            "type": "string"
+          },
+          "blobName": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "description": "Fixed price in cents"
+          },
+          "priceMarkup": {
+            "type": "number",
+            "description": "Price markup percentage"
+          },
+          "period": {
+            "$ref": "#/components/schemas/PeriodDTO"
+          }
         },
-        "required": ["id", "name", "format", "sku"]
+        "required": [
+          "id",
+          "name",
+          "format"
+        ]
       },
       "ArticleOfAssociationDTO": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "nameInEnglish": { "type": "string" },
-          "description": { "type": "string" },
-          "descriptionInEnglish": { "type": "string" },
-          "format": { "type": "string" },
-          "estimatedDeliverySeconds": { "type": "number" },
-          "sku": {
-            "type": "string",
-            "enum": [
-              "abw-certified-register-extract",
-              "abw-register-extract",
-              "alb-register-extract",
-              "are-company-data",
-              "arg-register-extract",
-              "arm-certified-register-extract",
-              "arm-register-extract",
-              "aus-certified-register-extract",
-              "aus-register-extract",
-              "aut-certified-register-extract",
-              "aut-register-extract",
-              "aze-register-extract",
-              "bel-certified-register-extract",
-              "bel-company-data",
-              "bel-financial-statements",
-              "bel-other-documents",
-              "bel-status",
-              "bel-ubo-data",
-              "bel-ubo-form",
-              "bel-trade-register-extract",
-              "bes-sa-register-extract",
-              "bes-se-register-extract",
-              "bgd-register-extract",
-              "bgr-register-extract",
-              "bgr-ubo-form",
-              "bhr-register-extract",
-              "bih-register-extract",
-              "blr-register-extract",
-              "blz-register-extract",
-              "bol-register-extract",
-              "bra-company-data",
-              "bra-register-extract",
-              "brb-register-extract",
-              "brn-register-extract",
-              "bwa-register-extract",
-              "can-register-extract",
-              "che-certified-register-extract",
-              "che-company-data",
-              "che-other-documents",
-              "chn-certified-register-extract",
-              "chn-company-data",
-              "chn-ubo-data",
-              "chn-ubo-form",
-              "col-certified-register-extract",
-              "cri-register-extract",
-              "cuw-register-extract",
-              "cym-certified-register-extract",
-              "cym-other",
-              "cym-register-extract",
-              "cyp-certified-register-extract",
-              "cyp-company-data",
-              "cyp-other",
-              "cyp-register-extract",
-              "deu-register-extract",
-              "deu-company-data",
-              "deu-financial-statements",
-              "deu-status",
-              "deu-ubo-data",
-              "deu-ubo-form",
-              "dnk-company-data",
-              "dnk-register-extract",
-              "dom-register-extract",
-              "esp-company-data",
-              "esp-financial-statements",
-              "esp-register-extract",
-              "esp-status",
-              "esp-ubo-data",
-              "esp-ubo-form",
-              "est-company-data",
-              "fin-company-data",
-              "fin-register-extract",
-              "fra-certified-register-extract",
-              "fra-company-data",
-              "fra-financial-statements",
-              "fra-other-documents",
-              "fra-register-extract",
-              "fra-status",
-              "fra-ubo-data",
-              "fra-ubo-form",
-              "gbr-company-data",
-              "gbr-financial-statements",
-              "gbr-other-documents",
-              "gbr-register-extract",
-              "gbr-status",
-              "gbr-ubo-data",
-              "gbr-ubo-form",
-              "ggy-company-data",
-              "gha-register-extract",
-              "gib-company-data",
-              "grc-company-data",
-              "gsy -certified-register-extract",
-              "hkg-company-profile",
-              "hkg-register-extract",
-              "hrv-certified-register-extract",
-              "hrv-register-extract",
-              "hun-certified-register-extract",
-              "idn-register-extract",
-              "imn-register-extract",
-              "ind-company-data",
-              "ind-register-extract",
-              "irl-company-data",
-              "isl-register-extract",
-              "isr-register-extract",
-              "ita-certified-register-extract",
-              "ita-company-data",
-              "ita-financial-statements",
-              "jey-company-data",
-              "jor-register-extract",
-              "jpn-company-data",
-              "khm-register-extract",
-              "kwt-register-extract",
-              "lie-certified-register-extract",
-              "lie-register-extract",
-              "lka-register-extract",
-              "lso-register-extract",
-              "ltu-company-data",
-              "lux-company-data",
-              "lux-register-extract",
-              "lva-company-data",
-              "mar-certified-register-extract",
-              "mar-register-extract",
-              "mhl-register-extract",
-              "mkd-company-data",
-              "mlt-company-data",
-              "mmr-register-extract",
-              "mus-register-extract",
-              "mys-company-data",
-              "mys-register-extract",
-              "nld-certified-register-extract",
-              "nld-company-data",
-              "nld-financial-statements",
-              "nld-other-documents",
-              "nld-register-extract",
-              "nld-status",
-              "nor-company-data",
-              "nzl-company-data",
-              "pak-register-extract",
-              "per-register-extract",
-              "phl-register-extract",
-              "pol-certified-register-extract",
-              "pri-register-extract",
-              "prt-certified-register-extract",
-              "prt-status",
-              "prt-company-data",
-              "prt-ubo-data",
-              "prt-ubo-form",
-              "qat-register-extract",
-              "rou-certified-register-extract",
-              "rou-register-extract",
-              "rus-register-extract",
-              "scg-register-extract",
-              "sgp-certified-register-extract",
-              "sgp-company-data",
-              "slb-register-extract",
-              "svk-certified-register-extract",
-              "svn-company-data",
-              "svn-register-extract",
-              "swe-company-data",
-              "tha-register-extract",
-              "ton-register-extract",
-              "tto-register-extract",
-              "tun-certified-register-extract",
-              "tun-register-extract",
-              "twn-company-data",
-              "twn-register-extract",
-              "uga-register-extract",
-              "ury-register-extract",
-              "us-ca-company-data",
-              "us-ri-company-data",
-              "usa-co-company-data",
-              "usa-ct-company-data",
-              "usa-de-company-data",
-              "usa-fl-company-data",
-              "usa-ge-register-extract",
-              "usa-ia-company-data",
-              "usa-id-company-data",
-              "usa-il-company-data",
-              "usa-in-company-data",
-              "usa-ky-company-data",
-              "usa-la-company-data",
-              "usa-me-company-data",
-              "usa-mn-company-data",
-              "usa-mo-company-data",
-              "usa-mt-company-data",
-              "usa-nc-company-data",
-              "usa-nd-company-data",
-              "usa-nh-company-data",
-              "usa-nj-company-data",
-              "usa-nm-company-data",
-              "usa-nv-company-data",
-              "usa-ny-company-data",
-              "usa-oh-company-data",
-              "usa-ok-company-data",
-              "usa-or-register-extract",
-              "usa-pa-company-data",
-              "usa-sc-company-data",
-              "usa-sd-company-data",
-              "usa-tn-company-data",
-              "usa-tx-company-data",
-              "usa-ut-register-extract",
-              "usa-va-company-data",
-              "usa-wa-company-data",
-              "usa-wi-company-data",
-              "usa-wv-company-data",
-              "usa-wy-company-data",
-              "vgb-register-extract",
-              "vir-register-extract",
-              "vnm-certified-register-extract",
-              "vut-register-extract",
-              "wsm-register-extract",
-              "free",
-              "che-ubo-data"
-            ]
+          "id": {
+            "type": "string"
           },
-          "url": { "type": "string" },
-          "blobName": { "type": "string" },
-          "price": { "type": "number", "description": "Fixed price in cents" },
-          "priceMarkup": { "type": "number", "description": "Price markup percentage" },
-          "date": { "type": "string" },
-          "isConsolidated": { "type": "boolean" }
+          "name": {
+            "type": "string"
+          },
+          "nameInEnglish": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "descriptionInEnglish": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          },
+          "estimatedDeliverySeconds": {
+            "type": "number"
+          },
+          "url": {
+            "type": "string"
+          },
+          "blobName": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "description": "Fixed price in cents"
+          },
+          "priceMarkup": {
+            "type": "number",
+            "description": "Price markup percentage"
+          },
+          "date": {
+            "type": "string"
+          },
+          "isConsolidated": {
+            "type": "boolean"
+          }
         },
-        "required": ["id", "name", "format", "sku", "date", "isConsolidated"]
+        "required": [
+          "id",
+          "name",
+          "format",
+          "date",
+          "isConsolidated"
+        ]
       },
       "DocumentsImprovedDTO": {
         "type": "object",
         "properties": {
-          "tradeRegisterExtract": { "$ref": "#/components/schemas/DocumentWithUrlDto" },
-          "certifiedTradeRegisterExtract": { "$ref": "#/components/schemas/DocumentWithUrlDto" },
-          "financialStatements": { "type": "array", "items": { "$ref": "#/components/schemas/FinancialStatementDTO" } },
-          "articlesOfAssociation": { "type": "array", "items": { "$ref": "#/components/schemas/ArticleOfAssociationDTO" } },
-          "ultimateBeneficialOwnersCertificate": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentWithUrlDto" } },
-          "otherDocuments": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentWithUrlDto" } },
-          "lastFiscalYearFinancialStatement": { "type": "array", "items": { "$ref": "#/components/schemas/DocumentWithUrlDto" } },
-          "mostCompleteStatus": { "$ref": "#/components/schemas/DocumentWithUrlDto" }
+          "tradeRegisterExtract": {
+            "$ref": "#/components/schemas/DocumentWithUrlDto"
+          },
+          "certifiedTradeRegisterExtract": {
+            "$ref": "#/components/schemas/DocumentWithUrlDto"
+          },
+          "financialStatements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialStatementDTO"
+            }
+          },
+          "articlesOfAssociation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArticleOfAssociationDTO"
+            }
+          },
+          "ultimateBeneficialOwnersCertificate": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentWithUrlDto"
+            }
+          },
+          "otherDocuments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentWithUrlDto"
+            }
+          },
+          "lastFiscalYearFinancialStatement": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentWithUrlDto"
+            }
+          },
+          "mostCompleteStatus": {
+            "$ref": "#/components/schemas/DocumentWithUrlDto"
+          }
         },
         "required": [
           "tradeRegisterExtract",
@@ -1801,28 +1913,47 @@
             "type": "string",
             "description": "The status of the data point",
             "example": "succeeded",
-            "enum": ["succeeded", "in_progress", "failed"]
+            "enum": [
+              "succeeded",
+              "in_progress",
+              "failed"
+            ]
           },
           "jobs_in_progress": {
             "type": "array",
             "description": "List of job IDs currently in progress to retrieve this data point or this document. \n      You can retrieve the data once the job has finished by either listening to webhooks or repeating the same API call. \n      Note that data points remain available for 24 hours after purchase, allowing for multiple retrievals within this timeframe\n      Multiple jobs can be required to retrieve a single data points when there is multiple underlying data sources. In this case, you will receive multiple webhooks with more data at each step.",
-            "example": ["job_1", "job2"],
-            "items": { "type": "string" }
+            "example": [
+              "job_1",
+              "job2"
+            ],
+            "items": {
+              "type": "string"
+            }
           },
           "errors": {
             "type": "array",
             "description": "List of errors encountered while retrieving this data point or this document",
-            "example": ["The local registry could not be reached. Please retry later. "],
-            "items": { "type": "string" }
+            "example": [
+              "The local registry could not be reached. Please retry later. "
+            ],
+            "items": {
+              "type": "string"
+            }
           },
-          "cost": { "type": "number", "description": "The cost in credits for this data point or document", "example": 10 },
+          "cost": {
+            "type": "number",
+            "description": "The cost in credits for this data point or document",
+            "example": 10
+          },
           "costMarkup": {
             "type": "number",
             "description": "The percentage markup for this data point or document when the final cost is not yet known",
             "example": 20
           }
         },
-        "required": ["status"]
+        "required": [
+          "status"
+        ]
       },
       "DataStatus": {
         "type": "object",
@@ -1830,75 +1961,168 @@
           "dataPoints": {
             "type": "object",
             "description": "Retrieval status of data points",
-            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus", "description": "The retriveal status of the data point" }
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DataPointStatus",
+              "description": "The retriveal status of the data point"
+            }
           },
           "documents": {
             "type": "object",
             "description": "Retrieval status of documents",
-            "additionalProperties": { "$ref": "#/components/schemas/DataPointStatus", "description": "The retriveal status of the document" }
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DataPointStatus",
+              "description": "The retriveal status of the document"
+            }
           }
         },
-        "required": ["dataPoints", "documents"]
+        "required": [
+          "dataPoints",
+          "documents"
+        ]
       },
       "RequestMetadataDTO": {
         "type": "object",
         "properties": {
-          "companyId": { "type": "string", "example": "932884117", "description": "The requested company id." },
+          "companyId": {
+            "type": "string",
+            "example": "932884117",
+            "description": "The requested company id."
+          },
           "country": {
             "type": "string",
-            "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"],
+            "enum": [
+              "BE",
+              "CH",
+              "CN",
+              "DE",
+              "ES",
+              "FR",
+              "GB",
+              "IT",
+              "NL",
+              "PT",
+              "HK",
+              "LU",
+              "MT"
+            ],
             "example": "FR",
             "description": "The requested country code."
           },
-          "requestId": { "type": "string", "example": "request-12345", "description": "The unique identifier for the request." },
-          "dataPoints": { "type": "array", "items": { "type": "string" } },
-          "documents": { "type": "array", "items": { "type": "string" } },
+          "requestId": {
+            "type": "string",
+            "example": "request-12345",
+            "description": "The unique identifier for the request."
+          },
+          "dataPoints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "dataStatus": {
             "description": "Indicates the status of data points and documents associated with the company. It states if the data has been retrieved, if a job is in progress for asynchronous data, or if a job there was an error.",
-            "allOf": [{ "$ref": "#/components/schemas/DataStatus" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DataStatus"
+              }
+            ]
           }
         },
-        "required": ["country", "dataPoints", "documents"]
+        "required": [
+          "country",
+          "dataPoints",
+          "documents"
+        ]
       },
       "GetCompanyResultDTO": {
         "type": "object",
         "properties": {
-          "request": { "description": "The request", "allOf": [{ "$ref": "#/components/schemas/RequestMetadataDTO" }] },
+          "request": {
+            "description": "The request",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RequestMetadataDTO"
+              }
+            ]
+          },
           "company": {
             "description": "The main profile information of the company, including, if available, details such as name, registration number, address, and other core data.",
-            "allOf": [{ "$ref": "#/components/schemas/CompanyDTO" }]
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyDTO"
+              }
+            ]
           },
           "ultimateBeneficialOwners": {
             "description": "The persons of significant control of the company, including, if available, their name, nationality, and other relevant details.",
             "type": "array",
-            "items": { "$ref": "#/components/schemas/UltimateBeneficialOwnerDTO" }
+            "items": {
+              "$ref": "#/components/schemas/UltimateBeneficialOwnerDTO"
+            }
           },
           "legalRepresentatives": {
             "description": "The legal representatives of the company, which can be either individuals or companies.",
             "type": "array",
-            "items": { "$ref": "#/components/schemas/LegalRepresentativeDTO" }
+            "items": {
+              "$ref": "#/components/schemas/LegalRepresentativeDTO"
+            }
           },
           "shareholders": {
             "description": "The shareholders of the company, which can be either individuals or companies.",
             "type": "array",
-            "items": { "$ref": "#/components/schemas/ShareholderDTO" }
+            "items": {
+              "$ref": "#/components/schemas/ShareholderDTO"
+            }
           },
-          "documents": { "$ref": "#/components/schemas/DocumentsImprovedDTO" },
-          "documentsImproved": { "$ref": "#/components/schemas/DocumentsImprovedDTO" }
+          "establishments": {
+            "description": "The establishments of the company, including physical locations where business activities are conducted.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EstablishmentDTO"
+            }
+          },
+          "documents": {
+            "$ref": "#/components/schemas/DocumentsImprovedDTO"
+          }
         },
-        "required": ["request", "company"]
+        "required": [
+          "request",
+          "company"
+        ]
       },
       "GetPricingDTO": {
         "type": "object",
         "properties": {
           "country": {
             "type": "string",
-            "enum": ["BE", "CH", "CN", "DE", "ES", "FR", "GB", "IT", "NL", "PT", "HK", "LU", "MT"],
+            "enum": [
+              "BE",
+              "CH",
+              "CN",
+              "DE",
+              "ES",
+              "FR",
+              "GB",
+              "IT",
+              "NL",
+              "PT",
+              "HK",
+              "LU",
+              "MT"
+            ],
             "example": "FR",
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
           }
         },
-        "required": ["country"]
+        "required": [
+          "country"
+        ]
       }
     }
   }
