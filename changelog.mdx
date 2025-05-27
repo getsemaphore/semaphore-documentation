@@ -4,11 +4,42 @@ description: "Stay updated with the latest changes and improvements to Semaphore
 icon: "clock-rotate-left"
 ---
 
+<Update label="Week 23, 2025">
+
+## Platform
+
+<Callout type="info" emoji="🚀">
+  **Major Data Model Enhancements**
+</Callout>
+
+We've significantly expanded our data model to provide more comprehensive company information:
+
+- **Establishments** <Icon icon="building" color="#3B82F6" /> - Now you can retrieve all establishments associated with a company, including branch offices, subsidiaries, and other affiliated locations that operate under the parent company's legal identity. This helps you understand a company's physical presence and operational footprint.
+
+- **Other Key People** <Icon icon="users" color="#8B5CF6" /> - Introducing a new data point to capture important company personnel beyond legal representatives. This includes board members, auditors, commissioners, and other significant roles. Unlike legal representatives who have binding authority, Other Key People provides visibility into the broader governance and oversight structure of a company.
+
+- **Phone Numbers** <Icon icon="phone" color="#10B981" /> - Companies can now include multiple phone numbers in E.164 format (e.g., +33123456789), making it easier to establish contact through official channels.
+
+- **Website** <Icon icon="globe" color="#F59E0B" /> - Retrieve the official company website URL directly from the API response, providing quick access to the company's online presence.
+
+- **Status Details (Beta)** <Icon icon="info-circle" color="#EF4444" /> - We're introducing `statusDetailsBeta`, which provides enriched information about company status changes, including closure reasons, liquidation details, and important dates. As this feature is in beta, we're actively collecting feedback to refine the data structure and ensure it meets your needs.
+
+## Countries
+
+### 🇳🇴 Norway
+
+- **Initial support for Norway** - We're excited to announce support for Norwegian companies! Currently available data point:
+  - `companyProfile` - Access basic company information, legal representatives, other key peoples and establishments from the Norwegian Business Register (Brønnøysundregistrene)
+  - Documents coming soon!
+
+</Update>
+
 <Update label="Week 22, 2025">
 
 ## Platform
 
-- **Extended data model to include establishment logic**, enhancing our ability to capture and process subsidiary and branch office information across all supported countries.
+- **Extended data model to include establishment logic**, enhancing our ability to capture and process subsidiary and branch office information across all supported countries. 
+- **New values in Semaphore Standard for roles**
 
 ## Countries
 
