@@ -1892,7 +1892,7 @@
               "$ref": "#/components/schemas/DocumentWithUrlDto"
             }
           },
-          "mostCompleteStatus": {
+          "mostCompleteArticleOfAssociation": {
             "$ref": "#/components/schemas/DocumentWithUrlDto"
           }
         },
@@ -1903,7 +1903,7 @@
           "articlesOfAssociation",
           "ultimateBeneficialOwnersCertificate",
           "lastFiscalYearFinancialStatement",
-          "mostCompleteStatus"
+          "mostCompleteArticleOfAssociation"
         ]
       },
       "DataPointStatus": {
