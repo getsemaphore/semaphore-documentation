@@ -16,6 +16,10 @@ icon: "clock-rotate-left"
 
 - **Switched companyProfile to async process** - To overcome instability at the registry level, we will thus be able to automatically retry retrieving the company profile a few seconds after if the registry is unavailable.
 
+### 🇩🇪 Germany
+
+- **Added fallback to Handelsregister for document listing and retrieval** - Implemented fallback mechanism to the Handelsregister for document listing and retrieval (except for some financials, which will come later), resulting in improved robustness. When both registers fail simultaneously, the system will retry after 2 minutes for 10 times, then continue with exponential backoff up to 12 hours.
+
 </Update>
 
 <Update label="Week 24, 2025 (June 12)">
