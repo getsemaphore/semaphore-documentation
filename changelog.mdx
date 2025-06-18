@@ -6,7 +6,48 @@ icon: "clock-rotate-left"
 
 <Update label="Week 25, 2025">
 
+## Platform
+
+<Callout type="info" emoji="🚀">
+  **Enhanced Ownership Graph Analysis**
+</Callout>
+
+### 🎯 **Improved Ownership Graph**
+
+We're launching enhanced ownership graph analysis with better UBO identification and cleaner data presentation. This feature has been tested with German companies and provides valuable cross-checking capabilities against Transparenzregister data.
+
+**🔍 Enhanced UBO Identification**
+- **Dual calculation methods**: Accumulation and domination approaches with 25% ownership threshold
+- **Corporate UBO flagging** when ownership chains end at companies rather than individuals
+
+**📊 Simplified Data Format**
+- **Nodes and edges structure** for clearer ownership visualization
+- **Cross-border ownership support** with automatic termination at individual shareholders
+
+**🛡️ Improved Reliability**
+- **Better error handling** with partial results and circular ownership detection
+- **Entity deduplication** and search fallbacks when direct data is unavailable
+
 ## Countries
+
+### 🇩🇪 Germany
+
+**Enhanced Shareholder Data Extraction**
+
+We've improved German shareholder identification with a multi-source approach.
+
+**📋 Three-Source Extraction Strategy**
+
+The system automatically selects the best method based on company legal form:
+
+- **Gesellschafterliste extraction** (GmbH, UG, KG, etc.) - from company statutes and shareholder lists
+- **Trade register analysis** (AG, SE, KGaA) - from profit transfer agreements and control statements  
+- **Financial statement analysis** *(NEW)* - parent company identification from annual reports
+
+**🎯 Key Improvements**
+- **Multi-source validation** combines results from different document types for better accuracy
+- **Transparenzregister cross-checking** provides alternative verification of ownership data
+- **Automatic fallbacks** when primary data sources are unavailable
 
 ### 🇪🇸 Spain
 
