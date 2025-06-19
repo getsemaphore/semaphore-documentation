@@ -15,11 +15,18 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": ["introduction", "essentials/search", "essentials/retrieve_company"]
+            "pages": [
+              "introduction",
+              "essentials/search",
+              "essentials/retrieve_company",
+              "essentials/country-specifics"
+            ]
           },
           {
             "group": "Essentials",
-            "pages": ["essentials/pricing-and-caching"]
+            "pages": [
+              "essentials/pricing-and-caching"
+            ]
           }
         ]
       },
@@ -32,7 +39,9 @@
       },
       {
         "tab": "Changelog",
-        "pages": ["changelog"]
+        "pages": [
+          "changelog"
+        ]
       }
     ]
   },
