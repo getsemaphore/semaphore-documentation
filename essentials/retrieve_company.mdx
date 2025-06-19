@@ -172,12 +172,12 @@ Polling recommendations:
 
 ```bash
 curl --request POST \
-  --url https://api.getsemaphore.com/v1/company \
+  --url https://api.getsemaphore.com/v2/company \
   --header 'Content-Type: application/json' \
   --header 'x-api-key: <api-key>' \
   --data '{
-    "country": "FR",
-    "companyNumber": "928020932",
+    "countryCode": "FR",
+    "id": "928020932",
     "dataPoints": [
       "companyProfile",
       "ultimateBeneficialOwners",
