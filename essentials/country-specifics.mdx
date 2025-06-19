@@ -13,11 +13,12 @@ However, in some cases, both sources might fail. In such scenarios, our system i
 
 - An initial retry after **2 minutes**.
 - If that fails, we continue with an exponential backoff strategy for up to **12 hours**, with a maximum of **10 retries**.
+- We only retrieve documents associated with the specific company ID provided. Documents associated with companies that have been merged into this company are not retrieved at this time. Please contact contact@getsemaphore.com if you require this functionality.
 
 ### Shareholders Extraction
 
 For shareholder extraction, we employ a **Three-Source Extraction Strategy**. The system automatically selects the best method based on the company's legal form.
 
-- **Gesellschafterliste extraction:** Used for legal forms like **GmbH, UG, KG, etc.** Data is extracted from company statutes and shareholder lists.
+- **Gesellschafterliste extraction:** Used for legal forms like **GmbH, UG, KG, etc.** Data is extracted from shareholder lists.
 - **Trade register analysis:** Used for legal forms like **AG, SE, KGaA.** Information is gathered from profit transfer agreements and control statements in the trade register.
 - **Financial statement analysis:** A new method to identify the parent company from annual reports.
