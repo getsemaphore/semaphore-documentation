@@ -8,110 +8,63 @@ icon: "clock-rotate-left"
 
 ## ✨ Week 25 Highlights
 
-**Key improvements delivered this week:**
-
-- **🎯 Enhanced Ownership Graph Analysis** - Improved UBO identification with dual calculation methods and better data visualization through nodes and edges structure
-- **🇩🇪 Intelligent German Shareholder Computation** - Multi-source extraction strategy combining Gesellschafterliste, trade register analysis, and financial statement analysis
-- **🇵🇱 Poland Support Launch** - New comprehensive support for Polish entities with dual-source integration covering both CEIDG and KRS registries
-- **🇱🇺 Luxembourg Trade Registry Extract** - New support for Luxembourg trade registry extracts with comprehensive company documentation
+- **🎯 Enhanced Ownership Graph Analysis** - Improved UBO identification with dual calculation methods and better data visualization
+- **🇩🇪 Intelligent German Shareholder Computation** - Multi-source extraction strategy with automatic fallbacks
+- **🇵🇱 Poland Support Launch** - Full support for Polish entities with CEIDG and KRS registry integration
+- **🇱🇺 Luxembourg Trade Registry Extract** - New comprehensive document access (up to 1 hour retrieval time)
 
 ## Platform
 
-### 🎯 **Improved Ownership Graph**
+### 🎯 Enhanced Ownership Graph Analysis
 
-We're launching enhanced ownership graph analysis with better UBO identification and cleaner data presentation. This feature has been tested with German companies and provides valuable cross-checking capabilities against Transparenzregister data.
+We've launched improved ownership graph analysis with better UBO identification and cleaner data presentation, tested with German companies and providing cross-checking capabilities against Transparenzregister data.
 
-**🔍 Enhanced UBO Identification**
+**Key Improvements:**
 
-- **Dual calculation methods**: Accumulation and domination approaches with 25% ownership threshold
+- **Dual calculation methods** - Accumulation and domination approaches with 25% ownership threshold
 - **Corporate UBO flagging** when ownership chains end at companies rather than individuals
-
-**📊 Simplified Data Format**
-
-- **Nodes and edges structure** for clearer ownership visualization
-- **Cross-border ownership support** with automatic termination at individual shareholders
-
-**🛡️ Improved Reliability**
-
-- **Better error handling** with partial results and circular ownership detection
-- **Entity deduplication** and search fallbacks when direct data is unavailable
+- **Nodes and edges structure** for clearer ownership visualization with cross-border support
+- **Better error handling** with partial results, circular ownership detection, and entity deduplication
 
 ## Countries
 
 ### 🇩🇪 Germany
 
-**Enhanced Shareholder Data Extraction**
+**Enhanced Multi-Source Shareholder Data Extraction**
 
-We've improved German shareholder identification with a multi-source approach.
-
-**📋 Three-Source Extraction Strategy**
-
-The system automatically selects the best method based on company legal form:
-
-- **Gesellschafterliste extraction** (GmbH, UG, KG, etc.) - from company shareholder lists
-- **Trade register analysis** (AG, SE, KGaA) - from profit transfer agreements and control statements
-- **Financial statement analysis** _(NEW)_ - parent company identification from annual reports
-
-**🎯 Key Improvements**
-
+- **Three-source strategy** - Gesellschafterliste extraction, trade register analysis, and financial statement analysis _(NEW)_
 - **Multi-source validation** combines results from different document types for better accuracy
-- **Transparenzregister cross-checking** provides alternative verification of ownership data
-- **Automatic fallbacks** when primary data sources are unavailable
-
-### 🇪🇸 Spain
-
-- **Fixed document retrieval and listing** - Resolved an issue caused by a deployment mistake on our side that prevented retrieval and listing of Spanish documents, restoring full functionality for Spanish company document access.
-- **Improved parsing of activities** - Enhanced the extraction and processing of company activity data for better accuracy and consistency.
-
-### 🇮🇹 Italy
-
-- **Improved parsing of activities** - Enhanced the extraction and processing of company activity data for better accuracy and consistency.
-
-### 🇫🇷 France
-
-- **Fixed Ultimate Beneficial Owner retrieval** - Resolved issues with UBO data extraction and processing, ensuring reliable access to French beneficial ownership information.
-
-### 🇲🇹 Malta
-
-- **Switched companyProfile to async process** - To overcome instability at the registry level, we will thus be able to automatically retry retrieving the company profile a few seconds after if the registry is unavailable.
-
-### 🇵🇹 Portugal
-
-- **Improved shareholder parsing** - Enhanced the extraction and processing of shareholder data for better accuracy and consistency.
+- **Transparenzregister cross-checking** and automatic fallbacks when primary data sources are unavailable
+- **Improved Handelsregister fallback** for document listing and retrieval with exponential backoff retry logic
 
 ### 🇵🇱 Poland
 
 **Comprehensive Polish Business Registry Support**
 
-We're excited to announce full support for Polish entities with our dual-source integration approach.
+- **Dual registry coverage** - CEIDG (individual businesses) and KRS (companies) with smart ID prefixes
+- **Complete data points** - `companyProfile` and `availableDocuments` tailored to entity type
+- **Document support** - Trade register extract for both registries, historical extracts for KRS entities
 
-**🏢 Dual Registry Coverage**
+### 🇪🇸 Spain • 🇮🇹 Italy
 
-- **CEIDG (Central Registration and Information on Business Activity)** - Individual businesses and sole proprietorships via biznes.gov.pl
-- **KRS (National Court Register)** - Companies and legal entities via direct KRS API
+- **Fixed document retrieval and listing** (Spain) - Resolved deployment issue affecting Spanish document access
+- **Improved parsing of activities** (Both) - Enhanced extraction and processing for better accuracy
 
-**📊 Available Data Points**
+### 🇫🇷 France
 
-- **`companyProfile`** - Complete entity information including legal representatives, shareholders, and business activities
-- **`availableDocuments`** - Document listings tailored to entity type and registry source
+- **Fixed Ultimate Beneficial Owner retrieval** - Resolved UBO data extraction issues for reliable beneficial ownership information
 
-**📄 Document Support**
+### 🇲🇹 Malta
 
-- **Trade Register Extract** - Available for both CEIDG (certificates) and KRS (register extracts) entities
-- **Historical Trade Register Extract** - Available for KRS entities with comprehensive historical data
+- **Switched companyProfile to async process** - Automatic retry mechanism to overcome registry instability
 
-**🔍 Smart ID System**
+### 🇵🇹 Portugal
 
-- **`nip-{number}`** prefix for CEIDG entities (individual businesses)
-- **`krs-{number}`** prefix for KRS entities (companies and legal entities)
+- **Improved shareholder parsing** - Enhanced extraction and processing of shareholder data
 
 ### 🇱🇺 Luxembourg
 
-- **Added trade registry extract support** - Introduced comprehensive trade registry extract functionality for Luxembourg companies, providing access to official company documentation and registration details. Please note that retrieval may take up to one hour as the Luxembourg registry requires this processing time.
-
-### 🇩🇪 Germany
-
-- **Added fallback to Handelsregister for document listing and retrieval** - Implemented fallback mechanism to the Handelsregister for document listing and retrieval (except for some financials, which will come later), resulting in improved robustness. When both registers fail simultaneously, the system will retry after 2 minutes for 10 times, then continue with exponential backoff up to 12 hours.
+- **Added trade registry extract support** - Comprehensive functionality for Luxembourg companies _(Note: May take up to one hour due to registry processing time)_
 
 </Update>
 
