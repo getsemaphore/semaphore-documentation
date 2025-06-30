@@ -1,0 +1,115 @@
+---
+title: "United Kingdom"
+icon: "flag"
+---
+
+## 🇬🇧 United Kingdom
+
+### Company Identifiers
+
+The UK implementation provides comprehensive company identifiers through the Companies House API:
+
+- **companiesHouseNumber**: Primary company registration number (e.g., "03789983")
+- **jurisdiction**: Company jurisdiction within the UK (e.g., "england-wales", "scotland", "northern-ireland")
+
+### Search Capabilities
+
+- **By company name** (contains matching): `search("TECHNOLOGY UK LIMITED")`
+- **By registration number**: `search("03789983")`
+- **Overseas companies** (FC prefix): `search("FC022268")`
+- **UK establishments** (BR prefix): `search("BR011501")`
+
+### Activity Classifications
+
+For activity codes, you will always receive the exact **SIC codes** as returned by Companies House, with AI mapping to international standards:
+
+- **SIC Codes**: UK Standard Industrial Classification codes (guaranteed accuracy)
+- **NACE Mapping**: European standard classification
+- **ISIC Mapping**: International Standard Industrial Classification
+
+### Legal Forms
+
+For legal forms, we have a finite number of possible values for `localName`, directly mapped to standardized classifications. The UK supports 40+ legal form classifications:
+
+| Legal Form | Semaphore Standard |
+| ---------- | ------------------ |
+| Private unlimited company | Sole Proprietorship |
+| Private limited company | Limited Liability Company |
+| Public limited company | Corporation |
+| Old public company | Corporation |
+| Private Limited Company by guarantee without share capital, use of 'Limited' exemption | Limited Liability Company |
+| Limited partnership | Partnership |
+| Private limited by guarantee without share capital | Limited Liability Company |
+| Private Limited Company, use of 'Limited' exemption | Limited Liability Company |
+| Assurance company | Other |
+| Overseas company | Branch or Representative Office |
+| European Economic Interest Grouping | Other |
+| Investment company with variable capital | Trust |
+| Registered society | Other |
+| Industrial and Provident Society | Cooperative |
+| Northern Ireland company | Other |
+| Credit union | Other |
+| Northern Ireland other | Other |
+| Limited liability partnership | Partnership |
+| Royal charter company | Other |
+| Unregistered company | Other |
+| Other company type | Other |
+| European public limited-liability company (SE) | Corporation |
+| UK establishment | Branch or Representative Office |
+| Scottish partnership | Partnership |
+| Charitable Incorporated Organisation | Nonprofit Organization |
+| Scottish Charitable Incorporated Organisation | Nonprofit Organization |
+| Further education or sixth form college corporation | Government-Owned Entity |
+| Community interest company | Cooperative |
+| NHS foundation trust | Government-Owned Entity |
+
+### Officer Roles
+
+For officer roles, we have a finite number of possible values for `localName`, directly mapped to standardized roles. The UK supports 60+ officer role classifications:
+
+| Officer Role | Semaphore Standard |
+| ------------ | ------------------ |
+| CIC Manager | Manager |
+| Director | Director |
+| LLP Designated Member | Managing Partner |
+| LLP Member | Partner |
+| Manager of an EEIG | Manager |
+| Managing Officer | Chief Executive Officer |
+| Member of a Management Organ | Manager |
+| Member of a Supervisory Organ | Board Member |
+| Member of an Administrative Organ | Administrator |
+| Nominee Director | Director |
+| Nominee Secretary | Secretary |
+| Secretary | Secretary |
+| Judicial Factor | Receiver |
+| Person Authorised to Accept | Legal Advisor |
+| Person Authorised to Represent | Legal Advisor |
+| Receiver and Manager | Receiver |
+
+### Company Types Support
+
+**Regular UK Companies:**
+- **Format**: 8-digit number (e.g., `03789983`)
+- **Features**: Full company data, officers, PSCs, documents
+- **Establishments**: None (domestic companies)
+
+**Overseas Companies:**
+- **Format**: `FC` prefix (e.g., `FC022268`)
+- **Features**: Full company data + UK establishments
+- **Establishments**: UK branches/offices
+
+**UK Establishments:**
+- **Format**: `BR` prefix (e.g., `BR011501`)
+- **Parent**: Overseas company
+- **Data**: Branch-specific information
+
+### Data Quality & Performance
+
+The UK implementation provides high-quality data with excellent performance:
+
+- **🚀 Fast Processing**: Optimized data processing for core company information
+- **⚡ Guaranteed SIC Codes**: Direct from Companies House registry
+- **⚡ Standardized Legal Forms**: Consistent classification mapping
+- **⚡ Standardized Officer Roles**: Reliable role assignments
+- **🎯 Type Safety**: Full data validation and structure consistency
+- **🔄 Reliable Results**: Deterministic data processing 
