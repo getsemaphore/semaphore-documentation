@@ -3,9 +3,8 @@
   "paths": {
     "/v2/search": {
       "get": {
-        "operationId": "AppController_searchV2",
-        "summary": "Search for companies",
         "description": "This endpoint allows you to search for companies based on a country code and a query string.\n\nThe search can be performed using either a company legal name, commercial name, historical name, or registration number. Capabilities vary by country. \n\nThe results include basic company information such as name, address, and the id of the company. You can pass this id to the getCompany endpoint to retrieve more detailed information about the company.\n\nDepending on the country, the speed might vary, from sub-second results, up to 10 seconds.",
+        "operationId": "AppController_searchV2_v2",
         "parameters": [
           {
             "name": "country",
@@ -14,6 +13,7 @@
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California).",
             "schema": {
               "enum": [
+                "AT",
                 "BE",
                 "CH",
                 "CN",
@@ -21,12 +21,16 @@
                 "ES",
                 "FR",
                 "GB",
+                "IE",
                 "IT",
                 "NL",
+                "NO",
+                "PL",
                 "PT",
                 "HK",
                 "LU",
-                "MT"
+                "MT",
+                "TEST"
               ],
               "type": "string"
             }
@@ -62,16 +66,17 @@
             "x-api-key": []
           }
         ],
+        "summary": "Search for companies",
         "tags": [
+          "App",
           "Search"
         ]
       }
     },
     "/v2/company": {
       "post": {
-        "operationId": "AppController_getCompany",
-        "summary": "Retrieve company data",
         "description": "This endpoint allows you to retrieve detailed information about a specific company.\n\nYou can either:\n1. Make a new request by providing:\n   - country code\n   - company id\n   - desired data points\n   - optional document IDs\n\n2. Get results from a previous request by providing:\n   - requestId (this will return cached data and avoid being billed again)\n\nAvailable data points are:\n- companyProfile: Basic company information, legal representatives and shareholders\n- ultimateBeneficialOwners: Information about beneficial owners\n- availableDocuments: List of available official documents\n\nThere are two ways to retrieve documents:\n\n1. Two-step process:\n   - First, request the \"availableDocuments\" data point to get a list of all available documents with their IDs\n   - Then, use these specific document IDs in a second request\n\n2. Direct access using smart IDs:\n   - Use predefined smart IDs for quick access to common documents:\n     - trade_register_extract: Latest trade register extract\n     - certified_trade_register_extract: Latest certified trade register extract\n     - last_fiscal_year_financial_statement: Latest financial statement\n     - last_consolidated_article_of_association: Latest consolidated articles of association\n\nRefer to our country coverage documentation to check which smart IDs are available for each country.",
+        "operationId": "AppController_getCompany_v2",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -107,16 +112,17 @@
             "x-api-key": []
           }
         ],
+        "summary": "Retrieve company data",
         "tags": [
+          "App",
           "Data"
         ]
       }
     },
     "/v2/pricing": {
       "post": {
-        "operationId": "AppController_getPricing",
-        "summary": "Get pricing for a country",
         "description": "This endpoint allows you to retrieve the pricing information for a specific country.\n\nThe response includes:\n- Base price for company searches\n- Pricing for different data points (company profile, UBO, etc.)\n- Document retrieval costs\n- Any country-specific pricing variations\n\nThis can be useful for:\n- Understanding costs before making requests\n- Budgeting and planning purposes\n- Displaying pricing information to end users\n\nNote: Prices are returned in euros (EUR) and may vary based on your subscription plan.",
+        "operationId": "AppController_getPricing_v2",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -145,7 +151,9 @@
             "x-api-key": []
           }
         ],
+        "summary": "Get pricing for a country",
         "tags": [
+          "App",
           "Pricing"
         ]
       }
@@ -507,7 +515,8 @@
               "EH",
               "YE",
               "ZM",
-              "ZW"
+              "ZW",
+              "TEST"
             ],
             "example": "FR",
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
@@ -531,6 +540,7 @@
           "countryCode": {
             "type": "string",
             "enum": [
+              "AT",
               "BE",
               "CH",
               "CN",
@@ -538,12 +548,16 @@
               "ES",
               "FR",
               "GB",
+              "IE",
               "IT",
               "NL",
+              "NO",
+              "PL",
               "PT",
               "HK",
               "LU",
-              "MT"
+              "MT",
+              "TEST"
             ],
             "example": "FR",
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
@@ -561,7 +575,7 @@
             "example": [
               "companyProfile"
             ],
-            "description": "The data points to retrieve. Available data points are companyProfile, ultimateBeneficialOwners or availableDocuments."
+            "description": "The data points to retrieve. Available data points are companyProfile, ultimateBeneficialOwners, availableDocuments, or establishments."
           },
           "documents": {
             "type": "array",
@@ -589,6 +603,56 @@
           }
         }
       },
+      "CompanyStatusDetailsBetaDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "UNDER_INSOLVENCY_PROCEEDING",
+              "CLOSED",
+              "UNKNOWN"
+            ],
+            "example": "ACTIVE",
+            "description": "The standardized status of the company"
+          },
+          "closureReason": {
+            "type": "string",
+            "enum": [
+              "BANKRUPTCY",
+              "LIQUIDATION",
+              "MERGER",
+              "ACQUISITION",
+              "VOLUNTARY_DISSOLUTION",
+              "ADMINISTRATIVE_DISSOLUTION",
+              "COURT_ORDER",
+              "OTHER",
+              "UNKNOWN"
+            ],
+            "example": "BANKRUPTCY",
+            "description": "The reason for company closure, if applicable"
+          },
+          "closureDate": {
+            "type": "string",
+            "example": "2024-01-15",
+            "description": "The date when the company was closed, if applicable"
+          },
+          "insolvencyStartDate": {
+            "type": "string",
+            "example": "2023-12-01",
+            "description": "The date when insolvency proceedings started, if applicable"
+          },
+          "additionalInfo": {
+            "type": "string",
+            "example": "Company entered voluntary liquidation due to retirement of owner",
+            "description": "Additional information about the status"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "CompanyStatusDTO": {
         "type": "object",
         "properties": {
@@ -600,17 +664,23 @@
           "active": {
             "type": "boolean",
             "example": true,
-            "description": "Indicates if the company is active."
+            "description": "Indicates if the company is active. DEPRECATED: Use statusDetailsBeta instead"
+          },
+          "statusDetailsBeta": {
+            "description": "Detailed status information including closure reasons and dates",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyStatusDetailsBetaDTO"
+              }
+            ]
           }
         },
         "required": [
-          "localName",
-          "active"
+          "localName"
         ]
       },
       "LegalFormEnum": {
         "type": "string",
-        "description": "The standardized legal form of the company.",
         "enum": [
           "Sole Proprietorship",
           "Partnership",
@@ -622,7 +692,8 @@
           "Branch or Representative Office",
           "Trust",
           "Other"
-        ]
+        ],
+        "description": "The standardized legal form of the company."
       },
       "LegalFormDTO": {
         "type": "object",
@@ -639,20 +710,19 @@
           },
           "semaphoreStandard": {
             "example": "Limited Liability Company",
-            "$ref": "#/components/schemas/LegalFormEnum"
+            "description": "The standardized legal form of the company.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LegalFormEnum"
+              }
+            ]
           },
           "iso20275Code": {
             "type": "string",
             "example": "F8DD",
             "description": "The ISO 20275 Entity Legal Form code for the company."
           }
-        },
-        "required": [
-          "localName",
-          "englishTranslation",
-          "semaphoreStandard",
-          "iso20275Code"
-        ]
+        }
       },
       "MonetaryAmountDTO": {
         "type": "object",
@@ -677,6 +747,36 @@
           "amount",
           "currency"
         ]
+      },
+      "EmployeeCountDTO": {
+        "type": "object",
+        "properties": {
+          "exact": {
+            "type": "number",
+            "example": 150,
+            "description": "The exact number of employees, if known"
+          },
+          "min": {
+            "type": "number",
+            "example": 100,
+            "description": "The minimum number of employees in a range"
+          },
+          "max": {
+            "type": "number",
+            "example": 200,
+            "description": "The maximum number of employees in a range"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "example": "2024-03-15",
+            "description": "The date when the employee count was last updated"
+          },
+          "isEstimate": {
+            "type": "boolean",
+            "example": false,
+            "description": "Indicates if the employee count is an estimate"
+          }
+        }
       },
       "CompanyDTO": {
         "type": "object",
@@ -937,7 +1037,8 @@
               "EH",
               "YE",
               "ZM",
-              "ZW"
+              "ZW",
+              "TEST"
             ],
             "description": "The  ISO 3166-1 alpha-2 country code of the company registration country",
             "example": "FR"
@@ -1037,6 +1138,30 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/AddressDTO"
+              }
+            ]
+          },
+          "phones": {
+            "example": [
+              "+33123456789",
+              "+33987654321"
+            ],
+            "description": "An array of phone numbers for the company in E.164 format (e.g., +33123456789 for France, +1234567890 for USA).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "website": {
+            "type": "string",
+            "example": "https://www.example.com",
+            "description": "The official website URL of the company."
+          },
+          "employeeCount": {
+            "description": "The employee count information for the company.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmployeeCountDTO"
               }
             ]
           }
@@ -1314,7 +1439,6 @@
       },
       "RoleEnum": {
         "type": "string",
-        "description": "The standardized role of the individual.",
         "enum": [
           "Director",
           "Manager",
@@ -1329,8 +1453,20 @@
           "Legal Advisor",
           "General Counsel",
           "Partner",
-          "Associate"
-        ]
+          "Associate",
+          "Chairman of the Board",
+          "Board Member",
+          "Managing Director",
+          "Executive Director",
+          "Non-Executive Director",
+          "General Partner",
+          "Managing Partner",
+          "Limited Partner",
+          "Administrator",
+          "Liquidator",
+          "Receiver"
+        ],
+        "description": "The standardized role of the individual."
       },
       "RoleDTO": {
         "type": "object",
@@ -1340,7 +1476,7 @@
             "description": "The local role name in the local language",
             "example": "Directeur"
           },
-          "englishName": {
+          "englishTranslation": {
             "type": "string",
             "description": "The role name in English",
             "example": "Director"
@@ -1352,7 +1488,12 @@
           },
           "semaphoreStandard": {
             "example": "Director",
-            "$ref": "#/components/schemas/RoleEnum"
+            "description": "The standardized role of the individual.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RoleEnum"
+              }
+            ]
           }
         },
         "required": [
@@ -1522,6 +1663,16 @@
             "type": "number",
             "description": "The absolute number of shares owned by the shareholder",
             "example": 1000
+          },
+          "shareNominalPrice": {
+            "type": "number",
+            "description": "The nominal price or face value per share",
+            "example": 1
+          },
+          "source": {
+            "type": "string",
+            "description": "Description of how the shareholder was found and from which document",
+            "example": "Found in financial statements (Jahresabschluss 2023) - control relationship indicated by Konzernzugehörigkeit"
           }
         },
         "required": [
@@ -1531,6 +1682,11 @@
       "EstablishmentDTO": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the establishment",
+            "example": "EST-001"
+          },
           "name": {
             "type": "string",
             "description": "The name of the establishment",
@@ -1557,6 +1713,103 @@
         },
         "required": [
           "name"
+        ]
+      },
+      "OtherKeyPersonRoleEnum": {
+        "type": "string",
+        "enum": [
+          "Board Member",
+          "Non-Executive Director",
+          "Independent Director",
+          "Advisory Board Member",
+          "Board Observer",
+          "Auditor",
+          "Compliance Officer",
+          "Data Protection Officer",
+          "Money Laundering Reporting Officer",
+          "Secretary",
+          "Supervisor",
+          "Supervisory Board Member",
+          "C-Level Executive"
+        ],
+        "description": "The standardized role of the individual."
+      },
+      "OtherKeyPersonRoleDTO": {
+        "type": "object",
+        "properties": {
+          "localName": {
+            "type": "string",
+            "description": "The local role name in the local language",
+            "example": "Commissaire aux comptes"
+          },
+          "englishTranslation": {
+            "type": "string",
+            "description": "The role name in English",
+            "example": "Auditor"
+          },
+          "semaphoreStandard": {
+            "example": "Board Member",
+            "description": "The standardized role of the individual.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OtherKeyPersonRoleEnum"
+              }
+            ]
+          }
+        },
+        "required": [
+          "semaphoreStandard"
+        ]
+      },
+      "OtherKeyPersonDTO": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "description": "The role of the other key person",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OtherKeyPersonRoleDTO"
+              }
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The start date of the role",
+            "example": "2022-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "The end date of the role (if applicable)",
+            "example": "2023-12-31"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "individual",
+              "company"
+            ],
+            "description": "The type of the other key person (individual or company)",
+            "example": "individual"
+          },
+          "individual": {
+            "description": "Details if the other key person is an individual",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PhysicalPersonBaseDTO"
+              }
+            ]
+          },
+          "company": {
+            "description": "Details if the other key person is a company",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyDTO"
+              }
+            ]
+          }
+        },
+        "required": [
+          "type"
         ]
       },
       "AvailableDocumentDTO": {
@@ -1848,9 +2101,7 @@
         "required": [
           "id",
           "name",
-          "format",
-          "date",
-          "isConsolidated"
+          "format"
         ]
       },
       "DocumentsImprovedDTO": {
@@ -1887,10 +2138,7 @@
             }
           },
           "lastFiscalYearFinancialStatement": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DocumentWithUrlDto"
-            }
+            "$ref": "#/components/schemas/DocumentWithUrlDto"
           },
           "mostCompleteArticleOfAssociation": {
             "$ref": "#/components/schemas/DocumentWithUrlDto"
@@ -1991,6 +2239,7 @@
           "country": {
             "type": "string",
             "enum": [
+              "AT",
               "BE",
               "CH",
               "CN",
@@ -1998,12 +2247,16 @@
               "ES",
               "FR",
               "GB",
+              "IE",
               "IT",
               "NL",
+              "NO",
+              "PL",
               "PT",
               "HK",
               "LU",
-              "MT"
+              "MT",
+              "TEST"
             ],
             "example": "FR",
             "description": "The requested country code."
@@ -2087,6 +2340,16 @@
               "$ref": "#/components/schemas/EstablishmentDTO"
             }
           },
+          "otherKeyPersons": {
+            "description": "Other key persons associated with the company who do not have legal signing authority, such as board members, auditors, and compliance officers.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OtherKeyPersonDTO"
+            }
+          },
+          "graphBeta": {
+            "type": "object"
+          },
           "documents": {
             "$ref": "#/components/schemas/DocumentsImprovedDTO"
           }
@@ -2102,6 +2365,7 @@
           "country": {
             "type": "string",
             "enum": [
+              "AT",
               "BE",
               "CH",
               "CN",
@@ -2109,12 +2373,16 @@
               "ES",
               "FR",
               "GB",
+              "IE",
               "IT",
               "NL",
+              "NO",
+              "PL",
               "PT",
               "HK",
               "LU",
-              "MT"
+              "MT",
+              "TEST"
             ],
             "example": "FR",
             "description": "Country code, which can be an ISO country code, or for the United States, a combination of \"US\" and the state code (e.g., \"US-CA\" for California)."
