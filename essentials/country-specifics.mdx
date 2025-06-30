@@ -3,40 +3,29 @@ title: "Country Specifics"
 icon: "globe"
 ---
 
-## 🇩🇪 Germany
+This section contains detailed information about country-specific implementations, data sources, and unique features for each supported country.
 
-### Data Retrieval
+## Supported Countries
 
-We use both the **Handelregister** and the **UnternehmenRegister** to retrieve data and documents. This dual-source approach enables a fallback mechanism, ensuring higher data availability.
+### [🇩🇪 Germany](/essentials/germany)
 
-However, in some cases, both sources might fail. In such scenarios, our system implements a retry mechanism:
+- Dual-source data retrieval (Handelregister & UnternehmenRegister)
+- Three-source shareholder extraction strategy
+- Exponential backoff retry mechanism
 
-- An initial retry after **2 minutes**.
-- If that fails, we continue with an exponential backoff strategy for up to **12 hours**, with a maximum of **10 retries**.
-- We only retrieve documents associated with the specific company ID provided. Documents associated with companies that have been merged into this company are not retrieved at this time. Please contact contact@getsemaphore.com if you require this functionality.
+### [🇮🇹 Italy](/essentials/italy)
 
-### Shareholders Extraction
+- Comprehensive company identification system
+- 70+ legal form classifications
+- Multiple activity classification nomenclatures (ATECO, SIC, RAE, SAE)
+- AI-enhanced NACE and ISIC classifications
 
-For shareholder extraction, we employ a **Three-Source Extraction Strategy**. The system automatically selects the best method based on the company's legal form.
+### [🇵🇱 Poland](/essentials/poland)
 
-- **Gesellschafterliste extraction:** Used for legal forms like **GmbH, UG, KG, etc.** Data is extracted from shareholder lists.
-- **Trade register analysis:** Used for legal forms like **AG, SE, KGaA.** Information is gathered from profit transfer agreements and control statements in the trade register.
-- **Financial statement analysis:** A new method to identify the parent company from annual reports.
+- Dual registry system (CEIDG & KRS)
+- Hybrid API approach with specialized endpoints
+- Prefixed identifier system for registry distinction
 
-## 🇵🇱 Poland
+---
 
-### Dual Registry System
-
-Poland's implementation uses a **hybrid approach** with two different APIs:
-
-- **biznes.gov.pl API**: Used for search across both registries and for CEIDG entities (individual businesses and sole proprietorships)
-- **KRS API**: Used directly for companies and legal entities registered in the National Court Register
-
-### Dual ID System with Prefixes
-
-To distinguish between the two registry sources, our system uses prefixed identifiers:
-
-- **`nip-{number}`**: CEIDG entities (individual businesses) - handled via biznes.gov.pl
-- **`krs-{number}`**: KRS entities (companies and legal entities) - handled via direct KRS API
-
-This approach ensures optimal data retrieval by using biznes.gov.pl for search and CEIDG data, while leveraging the specialized KRS API for comprehensive company information and documents.
+_Click on any country above to view detailed country-specific information._

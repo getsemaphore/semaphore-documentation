@@ -1,0 +1,22 @@
+---
+title: "Poland"
+icon: "flag"
+---
+
+## 🇵🇱 Poland
+
+### Dual Registry System
+
+Poland's implementation uses a **hybrid approach** with two different APIs:
+
+- **biznes.gov.pl API**: Used for search across both registries and for CEIDG entities (individual businesses and sole proprietorships)
+- **KRS API**: Used directly for companies and legal entities registered in the National Court Register
+
+### Dual ID System with Prefixes
+
+To distinguish between the two registry sources, our system uses prefixed identifiers:
+
+- **`nip-{number}`**: CEIDG entities (individual businesses) - handled via biznes.gov.pl
+- **`krs-{number}`**: KRS entities (companies and legal entities) - handled via direct KRS API
+
+This approach ensures optimal data retrieval by using biznes.gov.pl for search and CEIDG data, while leveraging the specialized KRS API for comprehensive company information and documents.
