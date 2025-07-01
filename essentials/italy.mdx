@@ -103,18 +103,127 @@ Italy supports 70+ legal form classifications with official Italian descriptions
 
 ### Activity Classifications
 
-Italy provides comprehensive activity classification through multiple nomenclatures:
+Italy provides comprehensive activity classification through multiple nomenclatures with sophisticated processing logic:
 
-**Primary Classifications (API-sourced):**
+**ATECO Classifications (Italian Standard):**
 
-- **ATECO** (2007 & 2022): Italian standard industrial classification
-- **SIC**: US Standard Industrial Classification codes
-- **RAE**: Italian Economic Administrative Register classification
-- **SAE**: Italian Statistical Administrative classification
+- **ATECO2025**: Latest Italian classification standard
+  - **Primary**: The main business activity (first code returned)
+  - **Secondary**: Additional business activities (remaining codes)
+- **ATECO2022**: Previous Italian classification standard
+  - **Primary**: The main business activity (first code returned)  
+  - **Secondary**: Additional business activities (remaining codes)
 
-**AI-Enhanced Classifications:**
+All ATECO codes include English descriptions derived from official mappings and translations.
 
-- **NACE**: European standard classification (AI-inferred from ATECO codes)
-- **ISIC**: International Standard Industrial Classification (AI-inferred)
+**Single-Value Classifications:**
 
-The system filters out "ND99" (Not Available) codes and provides formal parsing for structured data with AI inference for international standards, ensuring comprehensive activity coverage while maintaining data quality.
+- **RAE**: Italian Economic Administrative Register classification (single code)
+- **SAE**: Italian Statistical Administrative classification (single code)
+- **SIC**: US Standard Industrial Classification (single code)
+
+**AI-Mapped International Classifications:**
+
+- **ISIC**: International Standard Industrial Classification (AI-inferred, single code)
+- **NACE**: European standard classification (AI-inferred, single code)
+
+**ISIC/NACE Generation Priority:**
+1. Primary ATECO2025 code (if available)
+2. Primary ATECO2022 code (if ATECO2025 unavailable)
+3. RAE code (if no ATECO codes available)
+4. SAE code (if no other codes available)
+
+The AI uses semantic analysis to map the highest-priority available classification to international standards, ensuring accurate cross-referencing while maintaining single, authoritative ISIC/NACE codes.
+
+**ATECO Code Length Summary:**
+Both ATECO2022 and ATECO2025 codes range from 2-digit to 6-digit lengths for both primary and secondary activities, with no clear logic differentiating code length based on primary vs secondary status.
+
+**Production Data Examples:**
+- 2-digit: `06` (Extraction of crude petroleum and natural gas)
+- 3-digit: `471` (Non-specialised retail sale), `821` (Office administrative activities)
+- 4-digit: `1073` (Manufacture of farinaceous products), `9312` (Activities of sports clubs)
+- 5-digit: `19201` (Petroleum refining), `47911` (Retail intermediation services)
+- 6-digit: `432101` (Installation of lighting and photovoltaic systems on buildings)
+
+**Note**: ATECO code granularity varies based on the company's registered activities and data availability in Italian registries, with both versions (2022/2025) showing identical length ranges.
+
+#### Example: Barilla G. E R. Fratelli SPA
+
+```json
+{
+  "activities": {
+    "ATECO2025": [
+      {
+        "code": "1073",
+        "description": "Manufacture of farinaceous products",
+        "isAIInferred": false
+      },
+      {
+        "code": "432101", 
+        "description": "Installation of lighting and photovoltaic systems on buildings",
+        "isAIInferred": false
+      },
+      {
+        "code": "432203",
+        "description": "Installation of fire sprinkler systems", 
+        "isAIInferred": false
+      }
+      // ... additional secondary codes
+    ],
+    "ATECO2022": [
+      {
+        "code": "1073",
+        "description": "Manufacture of farinaceous products",
+        "isAIInferred": false
+      },
+      {
+        "code": "432101",
+        "description": "Installation of lighting and photovoltaic systems on buildings",
+        "isAIInferred": false
+      }
+      // ... additional secondary codes
+    ],
+    "RAE": [
+      {
+        "code": "417",
+        "description": "PASTE ALIMENTARI",
+        "isAIInferred": false
+      }
+    ],
+    "SAE": [
+      {
+        "code": "430", 
+        "description": "Imprese produttive",
+        "isAIInferred": false
+      }
+    ],
+    "SIC": [
+      {
+        "code": "2098",
+        "description": "Macaroni, spaghetti & other noodle mfrs",
+        "isAIInferred": false
+      }
+    ],
+    "ISIC": [
+      {
+        "code": "1074",
+        "description": "Manufacture of macaroni, noodles, couscous and similar farinaceous products",
+        "isAIInferred": true
+      }
+    ],
+    "NACE": [
+      {
+        "code": "10.74",
+        "description": "Manufacture of macaroni, noodles, couscous and similar farinaceous products", 
+        "isAIInferred": true
+      }
+    ]
+  }
+}
+```
+
+In this example:
+- **Primary activity**: "1073" (Manufacture of farinaceous products) from ATECO2025
+- **ISIC/NACE generation**: Based on primary ATECO2025 code "1073"
+- **Secondary activities**: Multiple additional ATECO codes for various installation services
+- **Registry codes**: Single values for RAE (pasta manufacturing) and SAE (productive enterprises)
