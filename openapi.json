@@ -1702,6 +1702,11 @@
             "description": "The closing date of the establishment (if applicable)",
             "example": "2023-12-31"
           },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the establishment is currently active",
+            "example": true
+          },
           "address": {
             "description": "The address of the establishment",
             "allOf": [
@@ -1730,7 +1735,8 @@
           "Secretary",
           "Supervisor",
           "Supervisory Board Member",
-          "C-Level Executive"
+          "C-Level Executive",
+          "Other"
         ],
         "description": "The standardized role of the individual."
       },
